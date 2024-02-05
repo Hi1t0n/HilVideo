@@ -1,0 +1,9 @@
+Backend/src/HilVideo.Domain/bin/
+Backend/src/HilVideo.Domain/obj/
+Backend/src/HilVideo.Infrastructure/bin/
+Backend/src/HilVideo.Infrastructure/obj/
+Backend/src/UserSevice.Host/bin/
+Backend/src/UserSevice.Host/obj/
+Backend/src/UserSevice.Host/.idea/
+Diplom.drawio/
+Diplom.docx/

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HilVideo.API", "HilVideo.API.csproj", "{4E6462BB-714B-4247-A679-220E6917A100}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HilVideo.Domain", "..\HilVideo.Domain\HilVideo.Domain.csproj", "{E2066A00-BBB6-4375-960B-9ACCCB75B6AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HilVideo.Infrastructure", "..\HilVideo.Infrastructure\HilVideo.Infrastructure.csproj", "{53541592-233F-4079-B90F-34D6D85CB70C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E6462BB-714B-4247-A679-220E6917A100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E6462BB-714B-4247-A679-220E6917A100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E6462BB-714B-4247-A679-220E6917A100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E6462BB-714B-4247-A679-220E6917A100}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2066A00-BBB6-4375-960B-9ACCCB75B6AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2066A00-BBB6-4375-960B-9ACCCB75B6AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2066A00-BBB6-4375-960B-9ACCCB75B6AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2066A00-BBB6-4375-960B-9ACCCB75B6AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53541592-233F-4079-B90F-34D6D85CB70C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53541592-233F-4079-B90F-34D6D85CB70C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53541592-233F-4079-B90F-34D6D85CB70C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53541592-233F-4079-B90F-34D6D85CB70C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
