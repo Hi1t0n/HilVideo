@@ -17,7 +17,13 @@ public static class AuthRouting
         authGroup.MapGet(pattern: "/logout", handler: Logout);
         return application;
     }
-
+    
+    /// <summary>
+    /// Регистрация пользователя
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя</param>
+    /// <param name="authManager">Объекта authManager с методами для работы с бд</param>
+    /// <returns>Результат регистрации пользователя</returns>
     public static async Task<IResult> Register(UserRegisterRequest request, IAuthManager authManager)
     {
         var result = await authManager.Register(request);
@@ -35,7 +41,15 @@ public static class AuthRouting
 
         return Results.Ok(result.Value);
     }
-
+    
+    /// <summary>
+    /// Логин пользователя
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя для входа</param>
+    /// <param name="authManager"></param>
+    /// <param name="userManager"></param>
+    /// <param name="httpContext"></param>
+    /// <returns>Результат входа пользователя</returns>
     public static async Task<IResult> Login(LoginUserRequest request, IAuthManager authManager,IUserManager userManager, HttpContext httpContext)
     {
         var result = await authManager.Login(request);
@@ -61,6 +75,11 @@ public static class AuthRouting
     }
     
     //TODO: async
+    /// <summary>
+    /// Выход пользователя из системы
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns>Результат выхода пользователя</returns>
     public static async Task<IResult> Logout(HttpContext context)
     {
         if (!context.Request.Cookies.ContainsKey("token"))

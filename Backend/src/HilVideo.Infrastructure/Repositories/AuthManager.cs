@@ -28,6 +28,11 @@ public class AuthManager : IAuthManager
         _jwtProvider = jwtProvider;
     }
     
+    /// <summary>
+    /// Регистрация пользователя
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя для регистрации</param>
+    /// <returns>Результат регистрации с сообщением об ошибке</returns>
     public async Task<Result<UserRegisterResponse, IError>> Register(UserRegisterRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Login) || request.Login.Length > 30)
@@ -78,7 +83,12 @@ public class AuthManager : IAuthManager
         await _context.SaveChangesAsync();
         return Result.Success<UserRegisterResponse, IError>(new UserRegisterResponse(existingUser.Login,role.RoleName,existingUser.Email,existingUser.PhoneNumber,existingUser.CreatedDate));
     }
-
+    
+    /// <summary>
+    /// Вход пользователя
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя для входа</param>
+    /// <returns>Результат входа с сообщением об ошибке</returns>
     public async Task<Result<string,IError>> Login(LoginUserRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Password))
@@ -108,7 +118,7 @@ public class AuthManager : IAuthManager
 
         if (result is false)
         {
-            return Result.Failure<string, IError>(new UnauthorizedError("Неверынй логин или пароль"));
+            return Result.Failure<string, IError>(new UnauthorizedError("Неверный логин или пароль"));
         }
 
         var userData = new UserData(

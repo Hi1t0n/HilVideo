@@ -25,14 +25,25 @@ public static class UserRouter
 
         return application;
     }
-
+    
+    /// <summary>
+    /// Получение всех пользователей
+    /// </summary>
+    /// <param name="userManager"></param>
+    /// <returns>Результат получения всех пользователей</returns>
     public static async Task<IResult> GetAllUserAsync(IUserManager userManager)
     {
         var users = await userManager.GetAllUserAsync();
 
         return Results.Ok(users.Value);
     }
-
+    
+    /// <summary>
+    /// Получение пользователя по id
+    /// </summary>
+    /// <param name="id">Уникальный идентификатор пользователя</param>
+    /// <param name="userManager"></param>
+    /// <returns>Результат получения пользователя</returns>
     public static async Task<IResult> GetUserByIdAsync(Guid id, IUserManager userManager)
     {
         var result = await userManager.GetUserByIdAsync(id);
@@ -58,7 +69,13 @@ public static class UserRouter
 
         return Results.Ok(result.Value);
     }
-
+    
+    /// <summary>
+    /// Получение пользователя по логину
+    /// </summary>
+    /// <param name="login">Логин пользователя</param>
+    /// <param name="userManager"></param>
+    /// <returns>Результат получения пользователя</returns>
     public static async Task<IResult> GetUserByLoginAsync(string login, IUserManager userManager)
     {
         var result = await userManager.GetUserByLoginAsync(login);
@@ -74,6 +91,12 @@ public static class UserRouter
 
     }
     
+    /// <summary>
+    /// Обновление пользователя по id
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя</param>
+    /// <param name="userManager"></param>
+    /// <returns>Результат обновления данных</returns>
     public static async Task<IResult> UpdateUserByIdAsync(UpdateUserByIdRequest request, IUserManager userManager)
     {
         var result = await userManager.UpdateUserByIdAsync(request);
@@ -99,7 +122,13 @@ public static class UserRouter
 
         return Results.Ok(result.Value);
     }
-
+    
+    /// <summary>
+    /// Смена пароля пользователя по id
+    /// </summary>
+    /// <param name="request">DTO с данными</param>
+    /// <param name="userManager"></param>
+    /// <returns>Результат смены пароля</returns>
     public static async Task<IResult> ChangeUserPasswordByIdAsync(ChangeUserPasswordRequest request, IUserManager userManager)
     {
         var result = await userManager.ChangeUserPasswordByIdAsync(request);
@@ -126,6 +155,12 @@ public static class UserRouter
         return Results.Ok(result.Value);
     }
     
+    /// <summary>
+    /// Удаление пользователя по id
+    /// </summary>
+    /// <param name="id">Уникальный идентификатор пользователя</param>
+    /// <param name="userManager"></param>
+    /// <returns>Результат удаления пользователя</returns>
     public static async Task<IResult> DeleteUserByIdAsync(Guid id, IUserManager userManager)
     {
         var result = await userManager.DeleteUserByIdAsync(id);

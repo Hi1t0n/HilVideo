@@ -15,13 +15,20 @@ public class UserManager : IUserManager
     private readonly ApplicationDbContext _context;
 
     private readonly IPasswordHasher _passwordHasher;
+
+    private readonly ICheckUserData _checkUserData;
     
-    public UserManager(ApplicationDbContext context, IPasswordHasher passwordHasher)
+    public UserManager(ApplicationDbContext context, IPasswordHasher passwordHasher, ICheckUserData checkUserData)
     {
         _context = context;
         _passwordHasher = passwordHasher;
+        _checkUserData = checkUserData;
     }
     
+    /// <summary>
+    /// Получение всех пользователей
+    /// </summary>
+    /// <returns>Результат и список пользоватлей</returns>
     public async Task<Result<List<GetAllUsersResponse>>> GetAllUserAsync()
     {
         var users = await _context.Users.Join(_context.Roles,
@@ -32,7 +39,12 @@ public class UserManager : IUserManager
         
         return Result.Success(users);
     }
-
+    
+    /// <summary>
+    /// Получение пользователя по id
+    /// </summary>
+    /// <param name="id">Уникальный идентификатор</param>
+    /// <returns>Результат получения пользователя с сообщением об ошибке или с данными пользователя</returns>
     public async Task<Result<GetUserByIdResponse, IError>>? GetUserByIdAsync(Guid id)
     {
         var existingUser = await _context.Users.Join(_context.Roles,
@@ -67,12 +79,21 @@ public class UserManager : IUserManager
     }
     
     
-
+    /// <summary>
+    /// Обновление данных пользователя
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя</param>
+    /// <returns>Результат обновления пользователя</returns>
     public async Task<Result<User,IError>>? UpdateUserByIdAsync(UpdateUserByIdRequest request)
     {
         if(string.IsNullOrWhiteSpace(request.login) || request.login.Length  > 30)
         {
             return Result.Failure<User,IError>(new BadRequestError("Логин не может быть пустым или больше 30 символов"));
+        }
+
+        if (_checkUserData.CheckUserLogin(request.login).Result)
+        {
+            return Result.Failure<User, IError>(new BadRequestError("Логин уже занят"));
         }
         
         var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == request.id);
@@ -91,7 +112,12 @@ public class UserManager : IUserManager
         return Result.Success<User, IError>(existingUser);
 
     }
-
+    
+    /// <summary>
+    /// Удаления пользователя по id
+    /// </summary>
+    /// <param name="id">Уникальный идентификатор пользователя</param>
+    /// <returns>Результат удаления пользователя</returns>
     public async Task<Result<User, IError>>? DeleteUserByIdAsync(Guid id)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
@@ -104,7 +130,12 @@ public class UserManager : IUserManager
         await _context.SaveChangesAsync();
         return Result.Success<User, IError>(existingUser);
     }
-
+    
+    /// <summary>
+    /// Смена пароля пользователя по id
+    /// </summary>
+    /// <param name="request">DTO с данными пользователя для смены пароля</param>
+    /// <returns>Результат смены пароля</returns>
     public async Task<Result<User, IError>> ChangeUserPasswordByIdAsync(ChangeUserPasswordRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.currentPassword) || string.IsNullOrWhiteSpace(request.newPassword))
@@ -129,7 +160,12 @@ public class UserManager : IUserManager
         await _context.SaveChangesAsync();
         return Result.Success<User,IError>(existingUser);
     }
-
+    
+    /// <summary>
+    /// Получение пользователя по id
+    /// </summary>
+    /// <param name="login">Логин пользователя</param>
+    /// <returns>Результат получения данных пользователя</returns>
     public async Task<Result<GetUserByLoginResponse, IError>> GetUserByLoginAsync(string login)
     {
         var existingUser = await _context.Users.Join(_context.Roles,
