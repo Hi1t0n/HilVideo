@@ -1,0 +1,27 @@
+.header{
+    background-color: #282c34;
+    align-items: center;
+}
+
+.logo{
+    height: 50px;
+    width: 100px;
+}
+
+.navigationMenu{
+    display: flex;
+    align-items: center;
+}
+
+.navigationButton{
+    background: none;
+    border: none;
+    color: #969600;
+    font-size: 18px;
+    transition: 1s linear;
+}
+
+.navigationButton:hover{
+    color: #FFFF36;
+    transition: 1s linear;
+}
