@@ -10,10 +10,24 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.AddBusinessLogic(builder.Configuration ,connectionString);
- // требуется роль Owner для авторизации 
+const string allowCorsPolicy = "allowCorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowCorsPolicy, policyBuilder =>
+    {
+        policyBuilder.WithOrigins("*");
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyMethod();
+        policyBuilder.AllowCredentials();
+        policyBuilder.WithExposedHeaders();
+    } );
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+app.UseCors(allowCorsPolicy);
 app.AddUserRouter();
 app.AddAuthRouting();
 
