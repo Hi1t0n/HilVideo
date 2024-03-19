@@ -6,6 +6,7 @@ using UserService.Domain.Models;
 using AuthService.Infrastructure.Helpers;
 using UserService.Infrastructure.Context;
 using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using UserService.Infrastructure.ErrorObjects;
 
 namespace UserService.Infrastructure.Repositories;
@@ -178,7 +179,7 @@ public class UserManager : IUserManager
                 u.Email,
                 u.PhoneNumber,
                 u.CreatedDate
-            }).Where(u => u.Login == login).FirstOrDefaultAsync();
+            }).Where(u => u.Login == login.ToLower()).FirstOrDefaultAsync();
 
         if (existingUser is null)
         {

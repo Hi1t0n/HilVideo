@@ -12,7 +12,7 @@ using UserService.Infrastructure.Context;
 namespace UserService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240128212131_Initial")]
+    [Migration("20240319113813_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -83,7 +83,9 @@ namespace UserService.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("64141029-42fc-41f7-88eb-da0801efa3f3"));
 
                     b.HasKey("UserId");
 

@@ -15,13 +15,13 @@ public class CheckUserData : ICheckUserData
 
     public async Task<bool> CheckUserLogin(string login)
     {
-        var result = await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+        var result = await _context.Users.FirstOrDefaultAsync(u => u.Login == login.ToLower());
         return result != null;
     }
 
     public async Task<bool> CheckUserEmail(string email)
     {
-        var result = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var result = await _context.Users.FirstOrDefaultAsync(u => u.Email == email.ToLower());
         return result != null;
     }
 

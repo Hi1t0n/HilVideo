@@ -12,6 +12,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Login)
             .HasMaxLength(30)
             .IsRequired();
+        builder.Property(x => x.RoleId)
+            .HasDefaultValue(new Guid("64141029-42fc-41f7-88eb-da0801efa3f3"));
         builder.Property(x => x.Password)
             .IsRequired();
         builder.HasOne(u => u.Role)

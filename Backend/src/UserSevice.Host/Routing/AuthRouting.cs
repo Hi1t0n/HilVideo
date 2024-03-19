@@ -14,7 +14,7 @@ public static class AuthRouting
         var authGroup = application.MapGroup("/api/auth");
         authGroup.MapPost(pattern: "/register",handler: Register);
         authGroup.MapPost(pattern: "/login", handler: Login);
-        authGroup.MapGet(pattern: "/logout", handler: Logout);
+        authGroup.MapGet(pattern: "/logout", handler: Logout).RequireAuthorization();
         return application;
     }
     

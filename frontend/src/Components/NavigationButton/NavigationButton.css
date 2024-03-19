@@ -1,18 +1,3 @@
-.header{
-    background-color: #282c34;
-    align-items: center;
-}
-
-.logo{
-    height: 50px;
-    width: 100px;
-}
-
-.navigationMenu{
-    display: flex;
-    align-items: center;
-}
-
 .navigationButton{
     background: none;
     border: none;

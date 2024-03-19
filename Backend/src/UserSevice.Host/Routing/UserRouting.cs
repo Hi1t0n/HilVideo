@@ -15,13 +15,13 @@ public static class UserRouter
     {
         var userGroup = application.MapGroup("/api/users");
 
-        userGroup.MapGet(pattern: "/", handler: GetAllUserAsync).RequireAuthorization();
-        userGroup.MapGet(pattern: "/{id:guid}", handler: GetUserByIdAsync);
+        userGroup.MapGet(pattern: "/", handler: GetAllUserAsync).RequireAuthorization(policyNames: "OnlyOwnerPolicy");
+        userGroup.MapGet(pattern: "/{id:guid}", handler: GetUserByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         //userGroup.MapPost(pattern: "/", handler: CreateUserAsync);
-        userGroup.MapPut(pattern: "/", handler: UpdateUserByIdAsync);
-        userGroup.MapPut(pattern: "/changepassword", handler: ChangeUserPasswordByIdAsync);
-        userGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteUserByIdAsync);
-        userGroup.MapGet(pattern: "/{login}",handler: GetUserByLoginAsync);
+        userGroup.MapPut(pattern: "/", handler: UpdateUserByIdAsync).RequireAuthorization("UserAdminOwnerPolicy");
+        userGroup.MapPut(pattern: "/changepassword", handler: ChangeUserPasswordByIdAsync).RequireAuthorization("UserAdminOwnerPolicy");
+        userGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteUserByIdAsync).RequireAuthorization("UserAdminOwnerPolicy");
+        userGroup.MapGet(pattern: "/{login}",handler: GetUserByLoginAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
 
         return application;
     }

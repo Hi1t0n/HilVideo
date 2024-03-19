@@ -80,7 +80,9 @@ namespace UserService.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("64141029-42fc-41f7-88eb-da0801efa3f3"));
 
                     b.HasKey("UserId");
 

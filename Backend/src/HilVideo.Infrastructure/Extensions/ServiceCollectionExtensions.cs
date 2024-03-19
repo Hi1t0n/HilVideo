@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.Helpers;
@@ -21,6 +22,7 @@ public static class ServiceCollectionExtensions
     {
         serviceCollection.AddManager();
         serviceCollection.AddDatabase(connectionString);
+        serviceCollection.AddApiAuthentication(configuration);
         return serviceCollection;
     }
     
@@ -69,7 +71,20 @@ public static class ServiceCollectionExtensions
                     }
                 };
             });
-
-        serviceCollection.AddAuthorization();
+        serviceCollection.AddAuthorization(options =>
+        {
+            options.AddPolicy("OnlyOwnerPolicy", policy =>
+            {
+                policy.RequireClaim("Role", "Owner"); 
+            });
+            options.AddPolicy("AdminOwnerPolicy", policy =>
+            { 
+                policy.RequireClaim("Role", "Owner", "Admin");
+            });
+            options.AddPolicy("UserAdminOwnerPolicy", policy =>
+            {
+                policy.RequireClaim("Role", "User", "Admin", "Owner");
+            });
+        });
     }
 }

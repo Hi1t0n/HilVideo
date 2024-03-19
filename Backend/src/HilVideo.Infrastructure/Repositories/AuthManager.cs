@@ -66,22 +66,19 @@ public class AuthManager : IAuthManager
             }
         }
 
-        Role? role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "User");
-
         var existingUser = new User
         {
             UserId = Guid.NewGuid(),
-            Login = request.Login,
+            Login = request.Login.ToLower(),
             Password = _passwordHasher.HashPassword(request.Password),
-            RoleId = role.RoleId,
-            Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email,
+            Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.ToLower(),
             PhoneNumber = string.IsNullOrWhiteSpace(request.PhoneNumber) ? null : request.PhoneNumber,
             CreatedDate = DateTime.Now.ToShortDateString(),
         };
 
         await _context.Users.AddAsync(existingUser);
         await _context.SaveChangesAsync();
-        return Result.Success<UserRegisterResponse, IError>(new UserRegisterResponse(existingUser.Login,role.RoleName,existingUser.Email,existingUser.PhoneNumber,existingUser.CreatedDate));
+        return Result.Success<UserRegisterResponse, IError>(new UserRegisterResponse(existingUser.Login,existingUser.Email,existingUser.PhoneNumber,existingUser.CreatedDate));
     }
     
     /// <summary>
@@ -106,7 +103,7 @@ public class AuthManager : IAuthManager
                 u => u.RoleId,
                 r => r.RoleId,
                 (u, r) => new { User = u, RoleName = r.RoleName })
-            .Where(joined => joined.User.Login == request.Login)
+            .Where(u => u.User.Login == request.Login.ToLower())
             .FirstOrDefaultAsync();
 
         if (user is null)
