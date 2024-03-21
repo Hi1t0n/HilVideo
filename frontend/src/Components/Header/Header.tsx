@@ -9,8 +9,10 @@ function Header(){
         <header className={"header"}>
             <nav className={"navigationMenu"}>
                 <img src={logo} className={"logo"} alt={"Company logo"}/>
-                <NavigationButton children={"Войти"} onClick={()=> navigate('login',{replace: false})} />
-                <NavigationButton children={"Зарегистрироваться"} onClick={()=> navigate('registration', {replace: false})}></NavigationButton>
+                <div className={"navigationButton"}>
+                    <NavigationButton children={"Войти"} onClick={()=> navigate('login',{replace: false})} />
+                    <NavigationButton children={"Зарегистрироваться"} onClick={()=> navigate('registration', {replace: false})}></NavigationButton>
+                </div>
             </nav>
         </header>
     );

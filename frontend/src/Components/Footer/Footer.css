@@ -1,0 +1,13 @@
+.footer {
+    height: 100px;
+    background: #282c34;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer .image-button{
+    bottom: 10px;
+    display: flex;
+}

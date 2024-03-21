@@ -1,0 +1,16 @@
+.text-input{
+    border-radius: 5px;
+    height: 30px;
+    width: auto;
+    outline: 0;
+    outline-offset: 0;
+    background: #282c34;
+    transition: 1s linear;
+    color: darkgray;
+}
+
+.text-input:focus{
+    outline: none;
+    transition: 1s linear;
+    color: whitesmoke;
+}

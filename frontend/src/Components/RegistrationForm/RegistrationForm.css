@@ -1,0 +1,13 @@
+.container {
+    margin: 10px auto 5px;
+    width: 500px;
+    height: 400px;
+    background: gray;
+    border-radius: 10px;
+    box-shadow: 3px 3px 3px 3px lightgray;
+}
+
+.items-div {
+    margin-bottom: 5px;
+}
+

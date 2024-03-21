@@ -1,10 +1,16 @@
 import Header from "./Header/Header";
+import Footer from "./Footer/Footer";
 
 function MainPage(){
     return(
-        <body>
-            <Header></Header>
-        </body>
+        <>
+            <div>
+                <Header></Header>
+            </div>
+            <div>
+                <Footer></Footer>
+            </div>
+        </>
     );
 }
 
