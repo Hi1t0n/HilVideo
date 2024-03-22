@@ -1,0 +1,12 @@
+.button{
+    background: #969600;
+    height: 30px;
+    width: auto;
+    border-radius: 5px;
+    transition: 1s linear;
+}
+
+.button:hover{
+    background: #ACAC12;
+    transition: 1s linear;
+}

@@ -4,10 +4,21 @@
     height: 400px;
     background: gray;
     border-radius: 10px;
-    box-shadow: 3px 3px 3px 3px lightgray;
+    box-shadow: 3px 3px 10px 3px #282c34;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .items-div {
     margin-bottom: 5px;
+}
+
+.body{
+    background: radial-gradient(circle, #969600, #282c34);
+    background-size: 100%;
+    width: 100% ;
+    height: 100%;
 }
 
