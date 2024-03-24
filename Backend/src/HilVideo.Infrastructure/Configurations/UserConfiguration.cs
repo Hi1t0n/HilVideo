@@ -4,6 +4,9 @@ using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Configurations;
 
+/// <summary>
+/// Конфигурация для таблицы Users
+/// </summary>
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)

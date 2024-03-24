@@ -87,9 +87,13 @@ function RegistrationForm(){
         };
 
       try{
-          const response = await axios.post('https://localhost:7099/api/auth/register', userData)
+          const response = await axios('https://localhost:7099/api/auth/register', {
+              method: "POST",
+              data: userData
+          });
           if(response.status === 200){
               navigate('/login', {replace: true});
+              return;
           }
       }
       catch (error){
@@ -98,6 +102,7 @@ function RegistrationForm(){
               // @ts-ignore
               const errorMessage: string = axiosError.response.data.error;
               handleErrorMessage(errorMessage);
+              return;
           }
       }
 
@@ -112,42 +117,38 @@ function RegistrationForm(){
 
     return (
         <>
-            <html className={"body"}>
-                <body>
-                    <div className={"container"}>
-                        <div className={"items-div"}>
-                            <TextInput id={"login-input"} type={"text"} placeholder={"Логин"} value={login} required={true}
-                                       onChange={handleLoginChange} minLength={3} maxLength={30}
-                                       pattern={LOGIN_REGEX.toString()}/>
-                        </div>
-                        <div className={"items-div"}>
-                            <TextInput id={"password-input"} type={"password"} placeholder={"Пароль"} value={password}
-                                       required={true} onChange={handlePasswordChange} minLength={6} maxLength={30}
-                                       pattern={PASSWORD_REGEX.toString()}/>
-                        </div>
-                        <div className={"items-div"}>
-                            <TextInput id={"confirm-password-input"} type={"password"} placeholder={"Повторите пароль"}
-                                       value={confirmPassword} required={true} onChange={handleConfirmPasswordChange}
-                                       minLength={6} maxLength={30} pattern={PASSWORD_REGEX.toString()}/>
-                        </div>
-                        <div className={"items-div"}>
-                            <TextInput id={"email-input"} type={"email"} placeholder={"Email"} value={email} required={true}
-                                       onChange={handleEmailChange} pattern={EMAIL_REGEX.toString()}/>
-                        </div>
-                        <div className={"items-div"}>
-                            <TextInput id={"phone-number-input"} type={"tel"} placeholder={"Номер телефона"} value={phoneNumber}
-                                       required={true} minLength={11} maxLength={11} onChange={handlePhoneNumberChange}
-                                       pattern={PHONENUMBER_REGEX.toString()}/>
-                        </div>
-                        <div>
-                            <p className={"errorMessage"}>{errorMessage}</p>
-                        </div>
-                        <div>
-                            <Button onClick={handleRegistration} children={'Зарегистрироваться'}></Button>
-                        </div>
-                    </div>
-                </body>
-            </html>
+            <div className={"container"}>
+                <div className={"items-div"}>
+                    <TextInput id={"login-input"} type={"text"} placeholder={"Логин"} value={login} required={true}
+                               onChange={handleLoginChange} minLength={3} maxLength={30}
+                               pattern={LOGIN_REGEX.toString()}/>
+                </div>
+                <div className={"items-div"}>
+                    <TextInput id={"password-input"} type={"password"} placeholder={"Пароль"} value={password}
+                               required={true} onChange={handlePasswordChange} minLength={6} maxLength={30}
+                               pattern={PASSWORD_REGEX.toString()}/>
+                </div>
+                <div className={"items-div"}>
+                    <TextInput id={"confirm-password-input"} type={"password"} placeholder={"Повторите пароль"}
+                               value={confirmPassword} required={true} onChange={handleConfirmPasswordChange}
+                               minLength={6} maxLength={30} pattern={PASSWORD_REGEX.toString()}/>
+                </div>
+                <div className={"items-div"}>
+                    <TextInput id={"email-input"} type={"email"} placeholder={"Email"} value={email} required={true}
+                               onChange={handleEmailChange} pattern={EMAIL_REGEX.toString()}/>
+                </div>
+                <div className={"items-div"}>
+                    <TextInput id={"phone-number-input"} type={"tel"} placeholder={"Номер телефона"} value={phoneNumber}
+                               required={true} minLength={11} maxLength={11} onChange={handlePhoneNumberChange}
+                               pattern={PHONENUMBER_REGEX.toString()}/>
+                </div>
+                <div>
+                    <p className={"errorMessage"}>{errorMessage}</p>
+                </div>
+                <div>
+                    <Button onClick={handleRegistration} children={'Зарегистрироваться'}></Button>
+                </div>
+            </div>
         </>
     );
 }

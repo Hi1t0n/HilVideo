@@ -58,7 +58,10 @@ public static class AuthRouting
         {
             if (result.Error is BadRequestError)
             {
-                return Results.BadRequest(result.Error.ErrorMessange);
+                return Results.BadRequest(new
+                {
+                    error = result.Error.ErrorMessange
+                });
             }
             
             if (result.Error is UnauthorizedError)

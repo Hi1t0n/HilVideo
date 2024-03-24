@@ -108,14 +108,14 @@ public class AuthManager : IAuthManager
 
         if (user is null)
         {
-            return Result.Failure<string,IError>(new UnauthorizedError("Неверный логин или пароль"));
+            return Result.Failure<string,IError>(new BadRequestError("Неверный логин или пароль"));
         }
 
         var result = _passwordHasher.Verify(request.Password, user.User.Password);
 
         if (result is false)
         {
-            return Result.Failure<string, IError>(new UnauthorizedError("Неверный логин или пароль"));
+            return Result.Failure<string, IError>(new BadRequestError("Неверный логин или пароль"));
         }
 
         var userData = new UserData(

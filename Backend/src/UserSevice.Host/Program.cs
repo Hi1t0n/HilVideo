@@ -15,10 +15,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: allowCorsPolicy, policyBuilder =>
     {
-        policyBuilder.WithOrigins("*");
+        policyBuilder.WithOrigins("http://localhost:3000");
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowAnyMethod();
-        policyBuilder.WithExposedHeaders();
+        policyBuilder.AllowCredentials();
     } );
 });
 builder.Services.AddEndpointsApiExplorer();

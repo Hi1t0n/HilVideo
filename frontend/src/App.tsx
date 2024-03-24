@@ -1,8 +1,8 @@
 import React from 'react';
 import MainPage from "./Components/MainPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Events from "./Components/Test/Events";
 import RegistrationForm from "./Components/RegistrationForm/RegistrationForm";
+import LoginForm from "./Components/LoginForm/LoginForm";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path={"/"} element={<MainPage/>}/>
-                <Route path={"/login"} element={<Events/>}/>
+                <Route path={"/login"} element={<LoginForm/>}/>
                 <Route path={"/registration"} element={<RegistrationForm/>}/>
             </Routes>
         </BrowserRouter>
