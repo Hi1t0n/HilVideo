@@ -18,7 +18,6 @@ builder.Services.AddCors(options =>
         policyBuilder.WithOrigins("*");
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowAnyMethod();
-        policyBuilder.AllowCredentials();
         policyBuilder.WithExposedHeaders();
     } );
 });

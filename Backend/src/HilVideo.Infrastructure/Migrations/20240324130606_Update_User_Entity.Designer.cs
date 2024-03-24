@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserService.Infrastructure.Context;
@@ -11,9 +12,11 @@ using UserService.Infrastructure.Context;
 namespace UserService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240324130606_Update_User_Entity")]
+    partial class Update_User_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,13 +89,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.HasIndex("Login")
-                        .IsUnique();
-
-                    b.HasIndex("PhoneNumber")
                         .IsUnique();
 
                     b.HasIndex("RoleId");

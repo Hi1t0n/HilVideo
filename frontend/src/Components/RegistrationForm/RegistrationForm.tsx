@@ -2,6 +2,8 @@ import './RegistrationForm.css'
 import React, {useState} from "react";
 import TextInput from "../Input/TextInput/TextInput";
 import Button from "../Button/Button";
+import axios, {AxiosError} from "axios";
+import {useNavigate} from "react-router-dom";
 
 function RegistrationForm(){
     const [login, setLogin] = useState("");
@@ -9,6 +11,9 @@ function RegistrationForm(){
     const [confirmPassword, setConfirmPassword] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const navigate = useNavigate();
 
     const handleLoginChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setLogin(e.target.value);
@@ -24,6 +29,10 @@ function RegistrationForm(){
 
     const handleEmailChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
+    }
+
+    const handleErrorMessage = (e: string) => {
+        setErrorMessage(e)
     }
 
     /* Обновление phoneNumber и проверка на то что введена именно цифра */
@@ -42,7 +51,57 @@ function RegistrationForm(){
 
     /* Действие при нажатии на кнопку регистрации */
     const handleRegistration = async () => {
-      
+
+        /* Проверка логина */
+      if(!LOGIN_REGEX.test(login)){
+          handleErrorMessage("Логин должен состоять букв aA-zZ, цифр 0-9 и символов _-");
+          return;
+      }
+
+        /* Проверка пароля */
+      if(!PASSWORD_REGEX.test(password)){
+          handleErrorMessage("Введен не верный пароль");
+          return;
+      }
+        /* Проверка на соответствие паролей */
+      if(password !== confirmPassword){
+          handleErrorMessage("Пароли не совпадают");
+          return;
+      }
+        /* Проверка номера телефона */
+      if(!PHONENUMBER_REGEX.test(phoneNumber)){
+          handleErrorMessage("Введен не верный номер телефона");
+          return;
+      }
+        /* Проверка электронной почты */
+      if(!EMAIL_REGEX.test(email)){
+          handleErrorMessage("введен не верный email");
+          return;
+      }
+
+      const userData = {
+          Login: login,
+          Password: password,
+          Email: email,
+          PhoneNumber: phoneNumber
+        };
+
+      try{
+          const response = await axios.post('https://localhost:7099/api/auth/register', userData)
+          if(response.status === 200){
+              navigate('/login', {replace: true});
+          }
+      }
+      catch (error){
+          const axiosError = error as AxiosError;
+          if(axiosError.response){
+              // @ts-ignore
+              const errorMessage: string = axiosError.response.data.error;
+              handleErrorMessage(errorMessage);
+          }
+      }
+
+
     }
 
     /* Регулярные выражения для проверок */
@@ -79,6 +138,9 @@ function RegistrationForm(){
                             <TextInput id={"phone-number-input"} type={"tel"} placeholder={"Номер телефона"} value={phoneNumber}
                                        required={true} minLength={11} maxLength={11} onChange={handlePhoneNumberChange}
                                        pattern={PHONENUMBER_REGEX.toString()}/>
+                        </div>
+                        <div>
+                            <p className={"errorMessage"}>{errorMessage}</p>
                         </div>
                         <div>
                             <Button onClick={handleRegistration} children={'Зарегистрироваться'}></Button>
