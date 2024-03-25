@@ -1,9 +1,7 @@
 using AuthService.Domain.Contracts;
 using AuthService.Domain.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.ErrorObjects;
-using UserService.Infrastructure.Repositories;
 
 namespace UserSevice.Host.Routing;
 

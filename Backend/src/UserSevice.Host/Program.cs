@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: allowCorsPolicy, policyBuilder =>
     {
-        policyBuilder.WithOrigins("http://localhost:3000");
+        policyBuilder.WithOrigins("https://localhost:3000");
         policyBuilder.AllowAnyHeader();
         policyBuilder.AllowAnyMethod();
         policyBuilder.AllowCredentials();
@@ -44,7 +44,8 @@ app.UseCookiePolicy(new CookiePolicyOptions
 {
     HttpOnly = HttpOnlyPolicy.Always,
     MinimumSameSitePolicy = SameSiteMode.Strict,
-    Secure = CookieSecurePolicy.Always
+    Secure = CookieSecurePolicy.Always,
+    
 });
 
 app.UseAuthentication();

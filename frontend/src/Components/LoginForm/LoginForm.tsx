@@ -5,6 +5,7 @@ import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setLoginState} from "../../store/LoginSlice";
+import {saveUserData} from "../../store/UserDataSlice";
 function LoginForm(){
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
@@ -34,6 +35,8 @@ function LoginForm(){
                 withCredentials: true
             });
             if(response.status === 200){
+                dispatch(saveUserData(response.data));
+                console.log(response.data);
                 dispatch(setLoginState(true));
                 navigate('/', {replace: true});
             }

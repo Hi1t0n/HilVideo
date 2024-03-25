@@ -3,6 +3,7 @@ import MainPage from "./Components/MainPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import RegistrationForm from "./Components/RegistrationForm/RegistrationForm";
 import LoginForm from "./Components/LoginForm/LoginForm";
+import AdminPanel from "./Components/AdminPanel/AdminPanel";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
                 <Route path={"/"} element={<MainPage/>}/>
                 <Route path={"/login"} element={<LoginForm/>}/>
                 <Route path={"/registration"} element={<RegistrationForm/>}/>
+                <Route path={"/adminpanel"} element={<AdminPanel/>}></Route>
             </Routes>
         </BrowserRouter>
     </div>
