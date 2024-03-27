@@ -6,24 +6,25 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState, setLoginState} from "../../store/LoginSlice";
 import axios, {AxiosError} from "axios";
 import {Avatar, Stack} from "@mui/material";
-import {saveUserData, UserDataState} from "../../store/UserDataSlice";
+import {UserDataState} from "../../store/UserDataSlice";
+import randomColor from "../../function/randomColor";
 function Header(){
     const navigate = useNavigate();
     // @ts-ignore
     const isLogin = useSelector((state: RootState)=>state.login.isLogin);
+    // @ts-ignore
     const userData = useSelector((state: UserDataState)=> state.userData);
     const dispatch = useDispatch();
 
+    const possibleRoles = ['Owner', 'Admin'];
 
 
-
+    /* Выход из профиля */
     const handleLogout = async () => {
         try {
             const response = await axios('https://localhost:7099/api/auth/logout', {
                 method: "GET",
                 withCredentials: true,
-
-
             });
             if(response.status === 200){
                 dispatch(setLoginState(false));
@@ -45,9 +46,9 @@ function Header(){
                     {isLogin ? (
                         <>
                             <Stack direction={"row"}>
-                                { (userData?.Role === 'Owner') && <NavigationButton children={"Админ панель"} onClick={()=>navigate('adminpanel', {replace: false})}/> }
+                                { (possibleRoles.includes(userData.roleName) ) && <NavigationButton children={"Админ панель"} onClick={()=>navigate('adminpanel', {replace: false})}/> }
                                 <NavigationButton children={"Выйти"} onClick={handleLogout}/>
-                                <Avatar onClick={()=>console.log(userData?.Role)}></Avatar>
+                                <Avatar style={{backgroundColor: randomColor}} onClick={()=> navigate('profile', {replace: false})}>{userData.login.toUpperCase().slice(0,2)}</Avatar>
                             </Stack>
                         </>
                     ) : (

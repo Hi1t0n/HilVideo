@@ -10,4 +10,7 @@
 .footer .image-button{
     bottom: 10px;
     display: flex;
+    margin-top: 5px;
+    width: 40px;
+    height: 40px;
 }
