@@ -4,6 +4,7 @@ import TextInput from "../Input/TextInput/TextInput";
 import Button from "../Button/Button";
 import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
+import {EMAIL_REGEX, LOGIN_REGEX, PASSWORD_REGEX, PHONENUMBER_REGEX} from '../../Data/REGEX';
 
 function RegistrationForm(){
     const [login, setLogin] = useState("");
@@ -109,11 +110,6 @@ function RegistrationForm(){
 
     }
 
-    /* Регулярные выражения для проверок */
-    const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+.+.[a-zA-Z]{2,4}$/i;
-    const LOGIN_REGEX = /^[a-zA-Z0-9_-]{3,30}$/;
-    const PASSWORD_REGEX = /^[a-zA-Z0-9@#$&*]{6,30}$/;
-    const PHONENUMBER_REGEX = /^[0-9]{11}$/;
 
     return (
         <>

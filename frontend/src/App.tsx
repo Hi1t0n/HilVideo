@@ -11,11 +11,13 @@ function App() {
     <div>
         <BrowserRouter>
             <Routes>
-                <Route path={"/"} element={<MainPage/>}/>
+                <Route path={"/"} element={<MainPage/>}>
+                    <Route path={"/profile"} element={<Profile/>}/>
+                </Route>
                 <Route path={"/login"} element={<LoginForm/>}/>
                 <Route path={"/registration"} element={<RegistrationForm/>}/>
                 <Route path={"/adminpanel"} element={<AdminPanel/>}/>
-                <Route path={"/profile"} element={<Profile/>}/>
+
             </Routes>
         </BrowserRouter>
     </div>

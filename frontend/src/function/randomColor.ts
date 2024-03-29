@@ -4,4 +4,6 @@ function randomColor() {
     return "#" + hex.toString(16);
 }
 
+const color : string = randomColor();
+
 export default randomColor();

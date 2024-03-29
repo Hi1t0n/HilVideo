@@ -152,7 +152,7 @@ public static class UserRouter
             }
         }
 
-        return Results.Ok(result.Value);
+        return Results.Ok();
     }
     
     /// <summary>
