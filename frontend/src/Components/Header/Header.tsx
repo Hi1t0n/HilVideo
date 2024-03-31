@@ -16,33 +16,6 @@ function Header(){
     const isLogin = useSelector((state: RootState)=>state.login.isLogin);
     // @ts-ignore
     const userData = useSelector((state: UserDataState)=> state.userData);
-    const dispatch = useDispatch();
-
-    const possibleRoles = ['Owner', 'Admin'];
-
-
-
-    /* Выход из профиля */
-    const handleLogout = async () => {
-        try {
-            const response = await axios('https://localhost:7099/api/auth/logout', {
-                method: "GET",
-                withCredentials: true,
-            });
-            if(response.status === 200){
-                dispatch(setLoginState(false));
-                await persistor.purge();
-                localStorage.removeItem('persist:root');
-                navigate('/');
-            }
-        } catch (error){
-            const axiosError = error as AxiosError;
-            if(axiosError.response && axiosError.response.status === 401){
-                navigate('/login', {replace: false});
-            }
-        }
-
-    }
 
     return(
         <header className={"header"}>
@@ -52,15 +25,13 @@ function Header(){
                     {isLogin ? (
                         <>
                             <Stack direction={"row"}>
-                                { (possibleRoles.includes(userData.roleName) ) && <NavigationButton children={"Админ панель"} onClick={()=>navigate('adminpanel', {replace: false})}/> }
-                                <NavigationButton children={"Выйти"} onClick={handleLogout}/>
                                 <Avatar style={{backgroundColor: color}} onClick={()=> navigate('profile', {replace: false})}>{userData.login.toUpperCase().slice(0,2)}</Avatar>
                             </Stack>
                         </>
                     ) : (
                         <>
-                            <NavigationButton children={"Войти"} onClick={()=> navigate('login',{replace: false})} />
-                            <NavigationButton children={"Зарегистрироваться"} onClick={()=> navigate('registration', {replace: false})}></NavigationButton>
+                            <NavigationButton children={"Войти"} onClick={()=> navigate('/login',{replace: false})} />
+                            <NavigationButton children={"Зарегистрироваться"} onClick={()=> navigate('/registration', {replace: false})}></NavigationButton>
                         </>
                     )}
 

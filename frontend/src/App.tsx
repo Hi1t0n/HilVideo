@@ -1,5 +1,5 @@
 import React from 'react';
-import MainPage from "./Components/MainPage";
+import MainPage from "./Components/MainPage/MainPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import RegistrationForm from "./Components/RegistrationForm/RegistrationForm";
 import LoginForm from "./Components/LoginForm/LoginForm";

@@ -12,12 +12,15 @@ import color from "../../function/randomColor";
 import {useSelector} from "react-redux";
 import {UserDataState} from "../../store/UserDataSlice";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ChangeUserPasswordRequest} from "../../Data/ChangeUserPasswordRequest";
 import axios, {AxiosError} from "axios";
 import {PASSWORD_REGEX} from "../../Data/REGEX";
 import {RootState} from "../../store/LoginSlice";
 import {useNavigate} from "react-router-dom";
+import LogoutIcon from '@mui/icons-material/Logout';
+import LogOutButton from "../Button/LogOutButton/LogOutButton";
+import AdminPanelButton from "../Button/AdminPanelButton/AdminPanelButton";
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 
@@ -27,11 +30,14 @@ function Profile() {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [severity , setSeverity] = useState<Severity>('success');
+
     // @ts-ignore
     const userData = useSelector((state: UserDataState)=> state.userData);
-    const isLogin = useSelector((state:RootState) => state.isLogin);
-
+    // @ts-ignore
+    const isLogin = useSelector((state:RootState) => state.login.isLogin);
     const navigate = useNavigate();
+
+    const possibleRoles = ['Owner', 'Admin'];
 
     const handleCurrentPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentPassword(e.target.value);
@@ -45,6 +51,8 @@ function Profile() {
         setShowAlert(false);
     };
 
+
+    /* Смена пароля пользователя */
     const handleChangePassword = async () => {
 
         if(currentPassword === newPassword){
@@ -90,34 +98,53 @@ function Profile() {
         }
     }
 
+    /* Проверка авторизации пользователя и перенаправление его */
+    useEffect(() => {
+        if(!isLogin){
+            navigate('/login', {replace: false})
+        }
+    }, [isLogin, navigate]);
+
     return(
 
         <>
-            <Card sx={{bgcolor: '#282c34'}}>
-                <CardHeader avatar={<Avatar sx={{bgcolor: color}}>{userData.login.toUpperCase().slice(0,2)}</Avatar>}>
-                    <Typography>'Имя пользователя: ${userData.login.toUpperCase()}'</Typography>
-                </CardHeader>
+            <Card sx={{ bgcolor: '#282c34', minHeight: '100vh', borderRadius: '0px' }}>
+                <CardHeader avatar={<Avatar sx={{bgcolor: color, minHeight: '40px', minWidth:'40px'}}>{userData.login.toUpperCase().slice(0,2)}</Avatar>} title={`Имя пользователя: ${userData.login.toUpperCase()}`} titleTypographyProps={{sx: {color: '#D3D3D3'}}} />
                 <CardContent>
-                    <Accordion sx={{bgcolor: '#282c34'}} >
+                    <Accordion sx={{bgcolor: '#282c34'}}>
                         <AccordionSummary expandIcon={<ArrowDropDownIcon sx={{color: '#D3D3D3'}}/>}>
                             <Typography sx={{color: '#D3D3D3'}}>Смена пароля</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <div>
-                                <Input sx={{marginTop: '5px'}} type={'password'} onChange={handleCurrentPasswordChange} placeholder={'Текущий пароль'} ></Input>
+                                <Input sx={{marginTop: '5px'}} type={'password'} onChange={handleCurrentPasswordChange}
+                                       placeholder={'Текущий пароль'}></Input>
                             </div>
                             <div>
-                                <Input sx={{marginTop: '5px'}}  type={'password'} onChange={handleNewPasswordChange} placeholder={'Новый пароль'} ></Input>
+                                <Input sx={{marginTop: '5px'}} type={'password'} onChange={handleNewPasswordChange}
+                                       placeholder={'Новый пароль'}></Input>
                             </div>
                             <div>
-                                <Button sx={{marginTop: '5px'}} variant={'outlined'} onClick={handleChangePassword} >Сменить пароль</Button>
+                                <Button sx={{marginTop: '5px'}} variant={'outlined'} onClick={handleChangePassword}>Сменить
+                                    пароль</Button>
                             </div>
                         </AccordionDetails>
                     </Accordion>
+                    <div>
+                        {possibleRoles.includes(userData.roleName) && (
+                            <AdminPanelButton text={"Админ панель"}/>
+                        )}
+                    </div>
+                    <div>
+                        <LogOutButton text={'Выход'}/>
+                    </div>
+
                 </CardContent>
             </Card>
+
             {showAlert && (
-                <Alert severity={severity} onClose={handleCloseAlert} style={{position:'absolute',bottom: '150px', left: '10px'}} >
+                <Alert severity={severity} onClose={handleCloseAlert}
+                       style={{position: 'absolute', bottom: '150px', left: '10px'}}>
                     {alertMessage}
                 </Alert>
             )}
