@@ -2,7 +2,7 @@ import TextInput from "../Input/TextInput/TextInput";
 import React, {useState} from "react";
 import Button from "../Button/Button";
 import axios, {AxiosError} from "axios";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setLoginState} from "../../store/LoginSlice";
 import {setUserData} from "../../store/UserDataSlice";
@@ -12,6 +12,8 @@ function LoginForm(){
     const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const fromPage = location.state?.from?.pathname || '/';
     const dispatch = useDispatch();
 
     const handleLoginChange = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +40,7 @@ function LoginForm(){
                 dispatch(setUserData(response.data));
                 console.log(response.data.roleName);
                 dispatch(setLoginState(true));
-                navigate('/', {replace: true});
+                navigate(fromPage, {replace: true});
             }
         } catch (error){
             const axiosError = error as AxiosError;

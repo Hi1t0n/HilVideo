@@ -98,12 +98,7 @@ function Profile() {
         }
     }
 
-    /* Проверка авторизации пользователя и перенаправление его */
-    useEffect(() => {
-        if(!isLogin){
-            navigate('/login', {replace: false})
-        }
-    }, [isLogin, navigate]);
+
 
     return(
 
