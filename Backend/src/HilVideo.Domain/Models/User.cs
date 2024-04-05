@@ -18,4 +18,6 @@ public class User
     public string? PhoneNumber { get; set; } = string.Empty;
     
     public string CreatedDate { get; set; }
+    public List<Movie> Movies { get; set; } = new();
+    public List<FavoriteMoviesUsers> FavoriteUserMovies { get; set; } = new();
 }

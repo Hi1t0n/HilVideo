@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserService.Infrastructure.Context;
@@ -11,9 +12,11 @@ using UserService.Infrastructure.Context;
 namespace UserService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240405203248_Add_entity_for_movie")]
+    partial class Add_entity_for_movie
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,21 +48,6 @@ namespace UserService.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Directors");
-                });
-
-            modelBuilder.Entity("UserService.Domain.Models.FavoriteMoviesUsers", b =>
-                {
-                    b.Property<Guid>("MovieId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("MovieId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FavoriteMoviesUsers");
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.Genre", b =>
@@ -118,9 +106,19 @@ namespace UserService.Infrastructure.Migrations
                     b.Property<Guid>("DirectorId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("DirectorId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("MovieId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("MovieId", "DirectorId");
 
                     b.HasIndex("DirectorId");
+
+                    b.HasIndex("DirectorId1");
+
+                    b.HasIndex("MovieId1");
 
                     b.ToTable("MoviesDirectors");
                 });
@@ -133,9 +131,19 @@ namespace UserService.Infrastructure.Migrations
                     b.Property<Guid>("GenreId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("GenreId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("MovieId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("MovieId", "GenreId");
 
                     b.HasIndex("GenreId");
+
+                    b.HasIndex("GenreId1");
+
+                    b.HasIndex("MovieId1");
 
                     b.ToTable("MoviesGenres");
                 });
@@ -239,25 +247,6 @@ namespace UserService.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UserService.Domain.Models.FavoriteMoviesUsers", b =>
-                {
-                    b.HasOne("UserService.Domain.Models.Movie", "Movie")
-                        .WithMany("FavoriteUserMovies")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UserService.Domain.Models.User", "User")
-                        .WithMany("FavoriteUserMovies")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("UserService.Domain.Models.Movie", b =>
                 {
                     b.HasOne("UserService.Domain.Models.MovieType", "MovieType")
@@ -272,16 +261,24 @@ namespace UserService.Infrastructure.Migrations
             modelBuilder.Entity("UserService.Domain.Models.MovieDirector", b =>
                 {
                     b.HasOne("UserService.Domain.Models.Director", "Director")
-                        .WithMany("MovieDirectors")
+                        .WithMany()
                         .HasForeignKey("DirectorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UserService.Domain.Models.Movie", "Movie")
+                    b.HasOne("UserService.Domain.Models.Director", null)
                         .WithMany("MovieDirectors")
+                        .HasForeignKey("DirectorId1");
+
+                    b.HasOne("UserService.Domain.Models.Movie", "Movie")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("UserService.Domain.Models.Movie", null)
+                        .WithMany("MovieDirectors")
+                        .HasForeignKey("MovieId1");
 
                     b.Navigation("Director");
 
@@ -291,16 +288,24 @@ namespace UserService.Infrastructure.Migrations
             modelBuilder.Entity("UserService.Domain.Models.MovieGenre", b =>
                 {
                     b.HasOne("UserService.Domain.Models.Genre", "Genre")
-                        .WithMany("MovieGenres")
+                        .WithMany()
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UserService.Domain.Models.Movie", "Movie")
+                    b.HasOne("UserService.Domain.Models.Genre", null)
                         .WithMany("MovieGenres")
+                        .HasForeignKey("GenreId1");
+
+                    b.HasOne("UserService.Domain.Models.Movie", "Movie")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("UserService.Domain.Models.Movie", null)
+                        .WithMany("MovieGenres")
+                        .HasForeignKey("MovieId1");
 
                     b.Navigation("Genre");
 
@@ -330,8 +335,6 @@ namespace UserService.Infrastructure.Migrations
 
             modelBuilder.Entity("UserService.Domain.Models.Movie", b =>
                 {
-                    b.Navigation("FavoriteUserMovies");
-
                     b.Navigation("MovieDirectors");
 
                     b.Navigation("MovieGenres");
@@ -345,11 +348,6 @@ namespace UserService.Infrastructure.Migrations
             modelBuilder.Entity("UserService.Domain.Models.Role", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("UserService.Domain.Models.User", b =>
-                {
-                    b.Navigation("FavoriteUserMovies");
                 });
 #pragma warning restore 612, 618
         }
