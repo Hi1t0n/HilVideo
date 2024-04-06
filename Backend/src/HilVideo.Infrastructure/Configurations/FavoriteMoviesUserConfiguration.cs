@@ -7,18 +7,18 @@ namespace UserService.Infrastructure.Configurations;
 /// <summary>
 /// Конфигурация таблицы FavoriteMoviesUsers
 /// </summary>
-public class FavoriteUserMoviesConfiguration : IEntityTypeConfiguration<FavoriteMoviesUsers>
+public class FavoriteMoviesUserConfiguration : IEntityTypeConfiguration<FavoriteMoviesUsers>
 {
     public void Configure(EntityTypeBuilder<FavoriteMoviesUsers> builder)
     {
         builder.HasKey(fum => new { fum.MovieId, fum.UserId });
 
         builder.HasOne(fum => fum.Movie)
-            .WithMany(m=>m.FavoriteUserMovies)
+            .WithMany(m=>m.FavoriteMoviesUsers)
             .HasForeignKey(fum => fum.MovieId);
 
         builder.HasOne(fum => fum.User)
-            .WithMany(u=>u.FavoriteUserMovies)
+            .WithMany(u=>u.FavoriteMoviesUsers)
             .HasForeignKey(fum => fum.UserId);
     }
 }

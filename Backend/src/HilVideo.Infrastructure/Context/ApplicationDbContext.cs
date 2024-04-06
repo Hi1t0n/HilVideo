@@ -21,6 +21,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<MovieGenre> MoviesGenres => Set<MovieGenre>();
     public DbSet<MovieType> MovieTypes => Set<MovieType>();
     public DbSet<FavoriteMoviesUsers> FavoriteMoviesUsers => Set<FavoriteMoviesUsers>();
+    public DbSet<MovieFile> MovieFiles => Set<MovieFile>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,7 +33,8 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfiguration(new MovieDirectorConfiguration());
         modelBuilder.ApplyConfiguration(new MovieGenreConfiguration());
         modelBuilder.ApplyConfiguration(new MovieTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new FavoriteUserMoviesConfiguration());
+        modelBuilder.ApplyConfiguration(new FavoriteMoviesUserConfiguration());
+        modelBuilder.ApplyConfiguration(new MovieFileConfiguration());
 
     }
 }

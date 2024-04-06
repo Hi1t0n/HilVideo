@@ -60,5 +60,10 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.HasOne(m => m.MovieType)
             .WithMany(mt => mt.Movies)
             .HasForeignKey(m => m.MovieTypeId);
+        
+        /* Связь один ко многим таблиц Movie и MovieFiles */
+        builder.HasMany(m => m.MovieFiles)
+            .WithOne(mf => mf.Movie)
+            .HasForeignKey(mf => mf.MovieId);
     }
 }

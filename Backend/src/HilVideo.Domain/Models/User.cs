@@ -19,5 +19,5 @@ public class User
     
     public string CreatedDate { get; set; }
     public List<Movie> Movies { get; set; } = new();
-    public List<FavoriteMoviesUsers> FavoriteUserMovies { get; set; } = new();
+    public List<FavoriteMoviesUsers> FavoriteMoviesUsers { get; set; } = new();
 }
