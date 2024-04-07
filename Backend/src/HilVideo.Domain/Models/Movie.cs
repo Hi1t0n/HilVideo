@@ -5,6 +5,7 @@ public class Movie
     public Guid MovieId { get; set; } /* id */
     public string MovieName { get; set; } /* Название фильма */
     public string MovieDescription { get; set; } /* Описание фильма */
+    public string PosterFilePath { get; set; } /* Постер фильма */
     public Guid MovieTypeId { get; set; } /* id типа фильма */
     public DateTime ReleaseDate { get; set; } /* Дата релиза */
     public MovieType MovieType { get; set; } /* Связь с таблицей MovieType */

@@ -16,6 +16,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder.HasIndex(m => m.MovieId).IsUnique();
         builder.Property(m => m.MovieName).IsRequired();
         builder.Property(m => m.MovieDescription).IsRequired();
+        builder.Property(m => m.PosterFilePath).IsRequired();
         
         /* Связь многие ко многим Movie и Director (MovieDirector) */
         builder.HasMany(m => m.Directors)
