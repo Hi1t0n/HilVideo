@@ -1,4 +1,3 @@
-using UserService.Infrastructure;
 using AuthService.Infrastructure;
 using Microsoft.AspNetCore.CookiePolicy;
 using UserService.Infrastructure.Extensions;
@@ -9,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
-builder.Services.AddBusinessLogic(builder.Configuration ,connectionString);
+builder.Services.AddBusinessLogic(builder.Configuration, connectionString);
 const string allowCorsPolicy = "allowCorsPolicy";
 builder.Services.AddCors(options =>
 {
@@ -27,8 +26,10 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseCors(allowCorsPolicy);
+
 app.AddUserRouter();
 app.AddAuthRouting();
+app.AddMovieRouting();
 
 if (app.Environment.IsDevelopment())
 {

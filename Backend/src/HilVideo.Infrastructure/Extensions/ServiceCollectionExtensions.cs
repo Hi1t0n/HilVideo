@@ -34,6 +34,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IAuthManager, AuthManager>();
         serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
         serviceCollection.AddScoped<IMovieManager, MovieManager>();
+        serviceCollection.AddScoped<IFileLoader, FileLoader>();
         return serviceCollection;
     }
     
