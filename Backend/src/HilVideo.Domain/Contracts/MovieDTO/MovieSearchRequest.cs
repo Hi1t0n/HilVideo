@@ -1,5 +1,3 @@
-using System.Net;
-using UserService.Infrastructure.Enums;
 using System.Web;
 
 namespace UserService.Domain.Contracts;

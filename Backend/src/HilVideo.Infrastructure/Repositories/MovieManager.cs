@@ -76,7 +76,7 @@ public class MovieManager : IMovieManager
                     MovieDescription = withFileRequest.MovieDescription,
                     PosterFilePath = posterFilePath.Value,
                     MovieTypeId = withFileRequest.MovieType,
-                    ReleaseDate = withFileRequest.ReliseDate
+                    ReleaseDate = withFileRequest.ReleaseData
                 };
 
                 await _context.Movies.AddAsync(movie);
@@ -229,7 +229,7 @@ public class MovieManager : IMovieManager
     /// </summary>
     /// <param name="data">Данные для добавления</param>
     /// <returns>Результат операции</returns>
-    public async Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteDTO data)
+    public async Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteRequest data)
     {
         await _context.FavoriteMoviesUsers.AddAsync(new FavoriteMoviesUsers()
         {
@@ -245,7 +245,7 @@ public class MovieManager : IMovieManager
     /// </summary>
     /// <param name="data">Данные для добавления</param>
     /// <returns>Результат операции</returns>
-    public async Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieToFavoritesAsync(MovieToFavoriteDTO data)
+    public async Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieFromFavoritesAsync(MovieToFavoriteRequest data)
     {
         var existData = await _context.FavoriteMoviesUsers
             .Where(fum => fum.UserId == data.userId && fum.MovieId == data.movieId).FirstOrDefaultAsync();

@@ -12,8 +12,8 @@ public interface IMovieManager
     Task<Result<GetMovieByIdResponse, IError>> GetMovieByIdAsync(Guid id);
     Task<Result<Movie, IError>> DeleteMovieByIdAsync(Guid id);
     Task<Result<Movie, IError>> UpdateMovieByIdAsync(Guid id);
-    Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteDTO data);
-    Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieToFavoritesAsync(MovieToFavoriteDTO data);
+    Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteRequest data);
+    Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieFromFavoritesAsync(MovieToFavoriteRequest data);
     Task<Result<IError, string>> GetFilePathByIdAsync(Guid id);
 
 }
