@@ -3,7 +3,6 @@ using UserService.Domain.Interfaces;
 using AuthService.Domain.Interfaces;
 using UserService.Domain.Contracts;
 using UserService.Domain.Models;
-using AuthService.Infrastructure.Helpers;
 using UserService.Infrastructure.Context;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -14,9 +13,7 @@ namespace UserService.Infrastructure.Repositories;
 public class UserManager : IUserManager
 {
     private readonly ApplicationDbContext _context;
-
     private readonly IPasswordHasher _passwordHasher;
-
     private readonly ICheckUserData _checkUserData;
     
     public UserManager(ApplicationDbContext context, IPasswordHasher passwordHasher, ICheckUserData checkUserData)

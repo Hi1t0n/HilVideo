@@ -1,13 +1,10 @@
-using System.Runtime.InteropServices;
 using CSharpFunctionalExtensions;
-using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
 using UserService.Domain.Models;
 using UserService.Infrastructure.Context;
 using UserService.Infrastructure.ErrorObjects;
 using AuthService.Domain.Interfaces;
 using AuthService.Domain.Contracts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace UserService.Infrastructure.Repositories;

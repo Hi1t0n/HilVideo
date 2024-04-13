@@ -2,13 +2,17 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http;
 using UserService.Domain.Interfaces;
 
-
-namespace AuthService.Infrastructure.Helpers;
+namespace Infrastructure.Helpers;
 
 public class FileLoader : IFileLoader
 {
     private const string VideoFilePath = @"..\..\..\..\..\data\Movies\"; /* Путь для сохранения фильмов */
     private const string ImageFilePath = @"..\..\..\..\..\data\Posters\"; /* Путь для сохранения фильмов */
+    private IWordsTranslate _wordsTranslate;
+    public FileLoader(IWordsTranslate wordsTranslate)
+    {
+        _wordsTranslate = wordsTranslate;
+    }
     
     /// <summary>
     /// Сохранение видео файлов 
@@ -24,7 +28,7 @@ public class FileLoader : IFileLoader
         }
 
         string filePath = Path.Combine(VideoFilePath, 
-            $"{WordsTranslate.WordTranslate(movieName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}");
+            $"{_wordsTranslate.WordTranslate(movieName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}");
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
@@ -48,7 +52,7 @@ public class FileLoader : IFileLoader
         }
 
         string filePath = Path.Combine(ImageFilePath,
-            $"{WordsTranslate.WordTranslate(movieName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}");
+            $"{_wordsTranslate.WordTranslate(movieName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}");
 
         using (var stream = new FileStream(filePath, FileMode.Create))
         {

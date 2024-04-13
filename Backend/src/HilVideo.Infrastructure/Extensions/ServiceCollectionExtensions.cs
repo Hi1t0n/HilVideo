@@ -1,17 +1,16 @@
 using System.Security.Claims;
 using System.Text;
 using AuthService.Domain.Interfaces;
-using AuthService.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.Context;
 using UserService.Infrastructure.Repositories;
 using AuthService.Infrastructure;
+using Infrastructure.Helpers;
 
 namespace UserService.Infrastructure.Extensions;
 
@@ -33,8 +32,11 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<ICheckUserData, CheckUserData>();
         serviceCollection.AddScoped<IAuthManager, AuthManager>();
         serviceCollection.AddScoped<IPasswordHasher, PasswordHasher>();
-        serviceCollection.AddScoped<IMovieManager, MovieManager>();
         serviceCollection.AddScoped<IFileLoader, FileLoader>();
+        serviceCollection.AddScoped<IWordsTranslate, WordsTranslate>();
+        serviceCollection.AddScoped<ISorting, Sorting>();
+        serviceCollection.AddScoped<IMovieManager, MovieManager>();
+        
         return serviceCollection;
     }
     

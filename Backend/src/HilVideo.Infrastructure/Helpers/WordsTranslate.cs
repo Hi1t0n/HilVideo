@@ -1,11 +1,13 @@
-namespace AuthService.Infrastructure.Helpers;
+using UserService.Domain.Interfaces;
+
+namespace Infrastructure.Helpers;
 
 /// <summary>
 /// Транслит с русских символов на аглийские 
 /// </summary>
-public static class WordsTranslate
+public class WordsTranslate : IWordsTranslate
 {
-    private static Dictionary<string, string> dictionaryChar = new()
+    private static Dictionary<string, string> _dictionaryChar = new()
     {
         {"а","a"},
         {"б","b"},
@@ -47,14 +49,14 @@ public static class WordsTranslate
     /// </summary>
     /// <param name="sourceWord">Слово которое надо траслировать</param>
     /// <returns>Транслированное слово</returns>
-    public static string WordTranslate(string sourceWord)
+    public string WordTranslate(string sourceWord)
     {
         string result = "";
 
         foreach (var ch in sourceWord)
         {
             var ss = "";
-            if (dictionaryChar.TryGetValue(ch.ToString(), out ss))
+            if (_dictionaryChar.TryGetValue(ch.ToString(), out ss))
             {
                 result += ss;
             }

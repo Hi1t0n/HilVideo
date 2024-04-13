@@ -1,10 +1,10 @@
 using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
 using UserService.Domain.Models;
 using UserService.Infrastructure.Context;
+using UserService.Infrastructure.Enums;
 using UserService.Infrastructure.ErrorObjects;
 
 namespace UserService.Infrastructure.Repositories;
@@ -12,58 +12,57 @@ namespace UserService.Infrastructure.Repositories;
 public class MovieManager : IMovieManager
 {
     private readonly ApplicationDbContext _context;
-    private readonly HttpContext _httpContext;
     private readonly IFileLoader _fileLoader;
-    
-    public MovieManager(ApplicationDbContext context, HttpContext httpContext, IFileLoader fileLoader)
+    private readonly ISorting _sorting;
+    public MovieManager(ApplicationDbContext context, IFileLoader fileLoader, ISorting sorting)
     {
         _context = context;
-        _httpContext = httpContext;
         _fileLoader = fileLoader;
+        _sorting = sorting;
     }
     
     /// <summary>
     /// Добавление фильма
     /// </summary>
-    /// <param name="request">Данные для добавления фильма</param>
+    /// <param name="withFileRequest">Данные для добавления фильма</param>
     /// <returns>Статус</returns>
-    public async Task<Result<AddMovieRequest, IError>> AddMovieAsync(AddMovieRequest request)
+    public async Task<Result<AddMovieWithFileRequest, IError>> AddMovieAsync(AddMovieWithFileRequest withFileRequest)
     {
-        if (string.IsNullOrWhiteSpace(request.MovieName))
+        if (string.IsNullOrWhiteSpace(withFileRequest.MovieName))
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Введите название фильма"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Введите название фильма"));
         }
         
-        if (string.IsNullOrWhiteSpace(request.MovieDescription))
+        if (string.IsNullOrWhiteSpace(withFileRequest.MovieDescription))
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Введите описание"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Введите описание"));
         }
         
-        if (string.IsNullOrWhiteSpace(request.MovieType.ToString()))
+        if (string.IsNullOrWhiteSpace(withFileRequest.MovieType.ToString()))
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите тип"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Выберите тип"));
         }
 
-        if (request.Directors.Count == 0)
+        if (withFileRequest.Directors.Count == 0)
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите режиссера"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Выберите режиссера"));
         }
 
-        if (request.Genres.Count == 0)
+        if (withFileRequest.Genres.Count == 0)
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите жанр"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Выберите жанр"));
         }
 
-        var movieFilePath = await _fileLoader.LoadVideoFileAsync(_httpContext.Request.Form.Files.GetFile("movie"), request.MovieName);
+        var movieFilePath = await _fileLoader.LoadVideoFileAsync(withFileRequest.MovieFile, withFileRequest.MovieName);
         if (movieFilePath.IsFailure)
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError($"{movieFilePath.Error}"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError($"{movieFilePath.Error}"));
         }
         
-        var posterFilePath = await _fileLoader.LoadImageFileAsync(_httpContext.Request.Form.Files.GetFile("poster"), request.MovieName);
+        var posterFilePath = await _fileLoader.LoadImageFileAsync(withFileRequest.PosterFile, withFileRequest.MovieName);
         if (movieFilePath.IsFailure)
         {
-            return Result.Failure<AddMovieRequest, IError>(new BadRequestError($"{posterFilePath.Error}"));
+            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError($"{posterFilePath.Error}"));
         }
 
         using (var transaction = await _context.Database.BeginTransactionAsync())
@@ -73,11 +72,11 @@ public class MovieManager : IMovieManager
                 var movie = new Movie
                 {
                     MovieId = Guid.NewGuid(),
-                    MovieName = request.MovieName,
-                    MovieDescription = request.MovieDescription,
+                    MovieName = withFileRequest.MovieName,
+                    MovieDescription = withFileRequest.MovieDescription,
                     PosterFilePath = posterFilePath.Value,
-                    MovieTypeId = request.MovieType,
-                    ReleaseDate = request.ReliseDate
+                    MovieTypeId = withFileRequest.MovieType,
+                    ReleaseDate = withFileRequest.ReliseDate
                 };
 
                 await _context.Movies.AddAsync(movie);
@@ -91,7 +90,7 @@ public class MovieManager : IMovieManager
 
                 await _context.MovieFiles.AddAsync(movieFile);
 
-                var movieGenres = request.Genres.Select(genre => new MovieGenre
+                var movieGenres = withFileRequest.Genres.Select(genre => new MovieGenre
                 {
                     MovieId = movie.MovieId,
                     GenreId = genre
@@ -99,7 +98,7 @@ public class MovieManager : IMovieManager
 
                 await _context.MoviesGenres.AddRangeAsync(movieGenres);
 
-                var movieDirectors = request.Directors.Select(director => new MovieDirector
+                var movieDirectors = withFileRequest.Directors.Select(director => new MovieDirector
                 {
                     MovieId = movie.MovieId,
                     DirectorId = director
@@ -114,28 +113,49 @@ public class MovieManager : IMovieManager
             catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Что-то пошло не так")); 
+                return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Что-то пошло не так")); 
             }
 
-            return Result.Success<AddMovieRequest,IError>(request);
+            return Result.Success<AddMovieWithFileRequest,IError>(withFileRequest);
         }
     }
-
+    
+    //TODO: Пагинация?
     /// <summary>
     /// Получение всех фильмов 
     /// </summary>
     /// <returns>Список фильмов (Для рендеринга карточек фильмов на клиенте)</returns>
-    public async Task<Result<List<GetMoviesResponse>>> GetAllMoviesAsync()
+    public async Task<Result<List<GetMoviesResponse>>> GetAllMoviesAsync(MovieSearchRequest request)
     {
-        var movieList = await _context.Movies
+        var query = _context.Movies.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.MovieName))
+        {
+            query = query.Where(m => EF.Functions.Like(m.MovieName, $"%{request.MovieName}%"));
+        }
+
+        if (request.Genres is not null && request.Genres.Any())
+        {
+            query = query.Where(m => m.MovieGenres.Any(mg => request.Genres.Contains(mg.GenreId)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.SortBy))
+        {
+            if (Enum.TryParse(request.SortBy, true, out SortBy sortBy))
+            {
+                query = _sorting.ApplySorting(query, sortBy);
+            }
+        }
+       
+
+        var movieList = await query
             .Include(m => m.MovieDirectors)
                 .ThenInclude(md => md.Director)
             .Include(m => m.MovieGenres)
                 .ThenInclude(mg => mg.Genre)
             .Include(m => m.MovieType)
                 .ThenInclude(mt => mt.Movies)
-            .Select(m => new GetMoviesResponse
-            (
+            .Select(m => new GetMoviesResponse(
                 m.MovieId,
                 m.MovieName,
                 m.MovieDescription,
@@ -145,8 +165,11 @@ public class MovieManager : IMovieManager
                 m.MovieDirectors
                     .Select(md => $"{md.Director.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
                     .ToList(),
-                m.MovieGenres.Select(mg => mg.Genre.GenreName).ToList()
+                m.MovieGenres
+                    .Select(mg => mg.Genre.GenreName)
+                    .ToList()
             )).ToListAsync();
+        
 
         return Result.Success(movieList);
     }

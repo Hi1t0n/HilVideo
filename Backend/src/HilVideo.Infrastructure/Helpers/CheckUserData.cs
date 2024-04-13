@@ -2,7 +2,7 @@ using AuthService.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using UserService.Infrastructure.Context;
 
-namespace AuthService.Infrastructure.Helpers;
+namespace Infrastructure.Helpers;
 
 public class CheckUserData : ICheckUserData
 {

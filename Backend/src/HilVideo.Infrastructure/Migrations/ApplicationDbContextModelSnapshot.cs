@@ -44,7 +44,7 @@ namespace UserService.Infrastructure.Migrations
                     b.HasIndex("DirectorId")
                         .IsUnique();
 
-                    b.ToTable("Directors");
+                    b.ToTable("Directors", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.FavoriteMoviesUsers", b =>
@@ -59,7 +59,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FavoriteMoviesUsers");
+                    b.ToTable("FavoriteMoviesUsers", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.Genre", b =>
@@ -80,7 +80,7 @@ namespace UserService.Infrastructure.Migrations
                     b.HasIndex("GenreName")
                         .IsUnique();
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.Movie", b =>
@@ -114,7 +114,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasIndex("MovieTypeId");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movies", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.MovieDirector", b =>
@@ -129,7 +129,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasIndex("DirectorId");
 
-                    b.ToTable("MoviesDirectors");
+                    b.ToTable("MoviesDirectors", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.MovieFile", b =>
@@ -158,7 +158,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("MovieFiles");
+                    b.ToTable("MovieFiles", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.MovieGenre", b =>
@@ -173,7 +173,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("MoviesGenres");
+                    b.ToTable("MoviesGenres", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.MovieType", b =>
@@ -194,7 +194,7 @@ namespace UserService.Infrastructure.Migrations
                     b.HasIndex("MovieTypeName")
                         .IsUnique();
 
-                    b.ToTable("MovieTypes");
+                    b.ToTable("MovieTypes", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.Role", b =>
@@ -209,7 +209,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
@@ -272,7 +272,7 @@ namespace UserService.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("UserService.Domain.Models.FavoriteMoviesUsers", b =>

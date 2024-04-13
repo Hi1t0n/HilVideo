@@ -1,13 +1,14 @@
 using CSharpFunctionalExtensions;
 using UserService.Domain.Contracts;
 using UserService.Domain.Models;
+using UserService.Infrastructure.Enums;
 
 namespace UserService.Domain.Interfaces;
 
 public interface IMovieManager
 {
-    Task<Result<AddMovieRequest, IError>> AddMovieAsync(AddMovieRequest request);
-    Task<Result<List<GetMoviesResponse>>> GetAllMoviesAsync();
+    Task<Result<AddMovieWithFileRequest, IError>> AddMovieAsync(AddMovieWithFileRequest withFileRequest );
+    Task<Result<List<GetMoviesResponse>>> GetAllMoviesAsync(MovieSearchRequest request);
     Task<Result<GetMovieByIdResponse, IError>> GetMovieByIdAsync(Guid id);
     Task<Result<Movie, IError>> DeleteMovieByIdAsync(Guid id);
     Task<Result<Movie, IError>> UpdateMovieByIdAsync(Guid id);
