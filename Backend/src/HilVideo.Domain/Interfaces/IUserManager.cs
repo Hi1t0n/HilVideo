@@ -1,6 +1,7 @@
 using UserService.Domain.Models;
 using UserService.Domain.Contracts;
 using CSharpFunctionalExtensions;
+
 namespace UserService.Domain.Interfaces;
 
 public interface IUserManager 

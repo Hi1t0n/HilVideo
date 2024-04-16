@@ -50,22 +50,21 @@ public static class UserRouter
 
         if (result.IsFailure)
         {
-            if (result.Error is BadRequestError)
+            switch (result.Error)
             {
-                return Results.BadRequest(new
-                {
-                    error = result.Error.ErrorMessange
-                });
-            }
-
-            if (result.Error is NotFoundError)
-            {
-                return Results.NotFound(new
-                {
-                    error = result.Error.ErrorMessange
-                });
+                case BadRequestError error:
+                    return Results.BadRequest(new
+                    {
+                        error = error.ErrorMessange
+                    });
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
             }
         }
+        
 
         return Results.Ok(result.Value);
     }

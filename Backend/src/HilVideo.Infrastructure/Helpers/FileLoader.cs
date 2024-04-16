@@ -20,7 +20,7 @@ public class FileLoader : IFileLoader
     /// <param name="file">Файл</param>
     /// <param name="movieName">Название фильма</param>
     /// <returns>Полный путь по которому сохранен файл</returns>
-    public async Task<Result<string>> LoadVideoFileAsync(IFormFile file, string movieName)
+    public async Task<Result<string>> LoadVideoFileAsync(IFormFile? file, string movieName)
     {
         if (file is null || file.Length == 0)
         {
@@ -44,7 +44,7 @@ public class FileLoader : IFileLoader
     /// <param name="file">Файл</param>
     /// <param name="movieName">Название фильма</param>
     /// <returns>Полный путь по которому сохранен файл</returns>
-    public async Task<Result<string>> LoadImageFileAsync(IFormFile file, string movieName)
+    public async Task<Result<string>> LoadImageFileAsync(IFormFile? file, string movieName)
     {
         if (file is null || file.Length == 0)
         {

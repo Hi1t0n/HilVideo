@@ -1,7 +1,10 @@
+using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.ErrorObjects;
+using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace UserSevice.Host.Routing;
 
@@ -15,6 +18,7 @@ public static class MovieRouting
         movieGroup.MapPost(pattern: "/addmovietofavorites", handler: AddMovieToFavorites).RequireAuthorization();
         movieGroup.MapGet(pattern: "/", handler: GetAllMovies);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
+        movieGroup.MapPut(pattern: "/", handler: UpdateMovieById);
         movieGroup.MapDelete(pattern: "/deletemoviefromfavorites", handler: DeleteMovieFromFavorites).RequireAuthorization();
         
         return application;
@@ -36,13 +40,16 @@ public static class MovieRouting
         
         var result = await movieManager.AddMovieAsync(data);
 
-        switch (result.Error)
+        if (result.IsFailure)
         {
-            case BadRequestResult error:
-                return Results.BadRequest(new
-                {
-                    error = result.Error.ErrorMessange
-                });
+            switch (result.Error)
+            {
+                case BadRequestError error:
+                    return Results.BadRequest(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
         }
         
         
@@ -67,13 +74,16 @@ public static class MovieRouting
     {
         var result = await movieManager.GetMovieByIdAsync(id);
 
-        switch (result.Error)
+        if (result.IsFailure)
         {
-            case NotFoundError error:
-                return Results.NotFound(new
-                {
-                    error = error.ErrorMessange
-                });
+            switch (result.Error)
+            {
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
         }
 
         return Results.Ok(result.Value);
@@ -86,10 +96,23 @@ public static class MovieRouting
         return Results.Ok();
     }
     
-    //TODO: API Обновления
-    public static async Task<IResult> UpdateMovieById(Guid id)
+    public static async Task<IResult> UpdateMovieById(UpdateMovieRequest request, IMovieManager movieManager)
     {
-        throw new Exception();
+        var result = await movieManager.UpdateMovieByIdAsync(request);
+
+        if (result.IsFailure)
+        {
+            switch (result.Error)
+            {
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
+        }
+
+        return Results.Ok(result.Value);
     }
     
     //TODO: API Удаления
@@ -103,13 +126,16 @@ public static class MovieRouting
     {
         var result = await movieManager.DeleteMovieFromFavoritesAsync(request);
 
-        switch (result.Error)
+        if (result.IsFailure)
         {
-            case NotFoundError error:
-                return Results.NotFound(new
-                {
-                    error = error.ErrorMessange
-                });
+            switch (result.Error)
+            {
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
         }
 
         return Results.Ok();

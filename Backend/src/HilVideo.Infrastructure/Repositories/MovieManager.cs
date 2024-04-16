@@ -1,11 +1,12 @@
 using CSharpFunctionalExtensions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
-using UserService.Domain.Models;
 using UserService.Infrastructure.Context;
 using UserService.Infrastructure.Enums;
 using UserService.Infrastructure.ErrorObjects;
+using UserService.Domain.Contracts;
+using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Repositories;
 
@@ -219,9 +220,61 @@ public class MovieManager : IMovieManager
         throw new NotImplementedException();
     }
 
-    public async Task<Result<Movie, IError>> UpdateMovieByIdAsync(Guid id)
+    public async Task<Result<Movie, IError>> UpdateMovieByIdAsync(UpdateMovieRequest request)
     {
-        throw new NotImplementedException();
+        var movie = await _context.Movies
+            .Include(m => m.MovieGenres)
+            .Include(m => m.MovieDirectors)
+            .Include(m => m.MovieFiles)
+            .Where(m => m.MovieId == request.MovieId)
+            .FirstOrDefaultAsync();
+
+        if (movie is null)
+        {
+            return Result.Failure<Movie, IError>(new NotFoundError("Обновляемый фильм не найден"));
+        }
+
+        movie.MovieName = request.MovieName;
+        movie.MovieDescription = request.MovieDescription;
+        movie.ReleaseDate = request.ReleaseDate;
+        movie.MovieTypeId = request.MovieType;
+        
+        // Удаление жанров
+        if (request.RemovedGenresId is not null)
+        {
+            movie.MovieGenres.RemoveAll(mg => request.RemovedGenresId.Contains(mg.GenreId));
+        }
+        
+        // Добавление жанров
+        if (request.AddedGenresId is not null)
+        { 
+            movie.MovieGenres.AddRange(request.AddedGenresId.Select(g => new MovieGenre()
+            {
+                MovieId = request.MovieId,
+                GenreId = g
+            }).ToList());
+        }
+        
+        // Удаление режиссеров
+        if (request.RemovedDirectorsId is not null)
+        {
+            movie.MovieDirectors.RemoveAll(md=> request.RemovedDirectorsId.Contains(md.DirectorId));
+        }
+        
+        // Добавление режиссеров
+        if (request.AddedDirectorsId is not null)
+        {
+            movie.MovieDirectors.AddRange(request.AddedDirectorsId.Select(d=> new MovieDirector()
+            {
+                MovieId = request.MovieId,
+                DirectorId = d
+            }).ToList());
+        }
+
+        await _context.SaveChangesAsync();
+
+
+        return Result.Success<Movie, IError>(movie);
     }
     
     /// <summary>
