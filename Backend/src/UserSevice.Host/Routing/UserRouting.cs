@@ -1,9 +1,5 @@
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
-using UserService.Domain.Models;
 using UserService.Infrastructure.ErrorObjects;
 
 namespace UserSevice.Host.Routing;
@@ -20,6 +16,8 @@ public static class UserRouter
         userGroup.MapGet(pattern: "/{id:guid}", handler: GetUserByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         userGroup.MapPut(pattern: "/", handler: UpdateUserByIdAsync).RequireAuthorization("UserAdminOwnerPolicy");
         userGroup.MapPut(pattern: "/changepassword", handler: ChangeUserPasswordByIdAsync).RequireAuthorization("UserAdminOwnerPolicy");
+        userGroup.MapPut(pattern: "/admin/add/{login}", handler: MakeUserAnAdminByLogin).RequireAuthorization("OnlyOwnerPolicy");
+        userGroup.MapPut(pattern: "/admin/remove/{login}", handler: RemoveUserAnAdminByLogin).RequireAuthorization("OnlyOwnerPolicy");
         userGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteUserByIdAsync).RequireAuthorization("UserAdminOwnerPolicy");
         userGroup.MapGet(pattern: "/{login}",handler: GetUserByLoginAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
 
@@ -152,6 +150,55 @@ public static class UserRouter
         }
 
         return Results.Ok();
+    }
+
+    public static async Task<IResult> MakeUserAnAdminByLogin(string login, IUserManager userManager)
+    {
+        var result = await userManager.MakeUserAnAdminByLogin(login);
+
+        if (result.IsFailure)
+        {
+            switch (result.Error)
+            {
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+                case BadRequestError error:
+                    return Results.BadRequest(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
+        }
+
+        return Results.Ok();
+    }
+
+    public static async Task<IResult> RemoveUserAnAdminByLogin(string login, IUserManager userManager)
+    {
+        var result = await userManager.RemoveUserAnAdminByLogin(login);
+
+        if (result.IsFailure)
+        {
+            switch (result.Error)
+            {
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+                case BadRequestError error:
+                    return Results.BadRequest(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
+        }
+
+        return Results.Ok();
+
     }
     
     /// <summary>

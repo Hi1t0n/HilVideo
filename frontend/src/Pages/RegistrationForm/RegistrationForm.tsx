@@ -1,7 +1,7 @@
 import './RegistrationForm.css'
 import React, {useState} from "react";
-import TextInput from "../Input/TextInput/TextInput";
-import Button from "../Button/Button";
+import TextInput from "../../Components/Input/TextInput/TextInput";
+import Button from "../../Components/Button/Button";
 import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
 import {EMAIL_REGEX, LOGIN_REGEX, PASSWORD_REGEX, PHONENUMBER_REGEX} from '../../Data/REGEX';

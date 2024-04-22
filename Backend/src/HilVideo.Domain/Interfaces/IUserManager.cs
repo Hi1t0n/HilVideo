@@ -18,5 +18,6 @@ public interface IUserManager
     Task<Result<User, IError>> ChangeUserPasswordByIdAsync(ChangeUserPasswordRequest request);
     Task<Result<GetUserByLoginResponse, IError>> GetUserByLoginAsync(string login);
 
-    //TODO: Избранное!!!!!
+    Task<Result<User, IError>> MakeUserAnAdminByLogin(string login);
+    Task<Result<User, IError>> RemoveUserAnAdminByLogin(string login);
 }

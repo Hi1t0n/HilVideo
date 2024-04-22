@@ -1,12 +1,12 @@
 import React from 'react';
-import MainPage from "./Components/MainPage/MainPage";
+import MainPage from "./Pages/MainPage/MainPage";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import RegistrationForm from "./Components/RegistrationForm/RegistrationForm";
-import LoginForm from "./Components/LoginForm/LoginForm";
-import AdminPanel from "./Components/AdminPanel/AdminPanel";
-import Profile from "./Components/Profile/Profile";
+import RegistrationForm from "./Pages/RegistrationForm/RegistrationForm";
+import LoginForm from "./Pages/LoginForm/LoginForm";
+import Profile from "./Pages/Profile/Profile";
 import RequiredAuth from "./hoc/RequiredAuth";
 import RequiredAuthAndOwnerOrAdminRole from "./hoc/RequiredAuthAndOwnerOrAdminRole";
+import AdminPanel from "./Pages/AdminPanel/AdminPanel";
 
 
 function App() {
@@ -20,14 +20,23 @@ function App() {
                             <Profile/>
                         </RequiredAuth>
                     }/>
-                    <Route path={"/adminpanel"} element={
-                        <RequiredAuthAndOwnerOrAdminRole>
-                            <AdminPanel/>
-                        </RequiredAuthAndOwnerOrAdminRole>
-                    }/>
                 </Route>
                 <Route path={"/login"} element={<LoginForm/>}/>
                 <Route path={"/registration"} element={<RegistrationForm/>}/>
+                <Route path={"/adminpanel"} element={
+                    <RequiredAuthAndOwnerOrAdminRole>
+                        <AdminPanel/>
+                    </RequiredAuthAndOwnerOrAdminRole>
+                }>
+                    <Route path={"movie"}>
+                        <Route path={"add"}/>
+                        <Route path={"delete"}/>
+                    </Route>
+                    <Route path={"admin"}>
+                        <Route path={"add"}/>
+                        <Route path={"remove"}/>
+                    </Route>
+                </Route>
             </Routes>
         </BrowserRouter>
     </div>

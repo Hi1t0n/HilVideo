@@ -1,6 +1,6 @@
 import "./Button.css"
 interface Props{
-    children: string
+    children: string;
     onClick: () => void;
 }
 function Button({children, onClick}:Props){

@@ -1,5 +1,3 @@
-using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
@@ -18,7 +16,7 @@ public static class MovieRouting
         movieGroup.MapPost(pattern: "/addmovietofavorites", handler: AddMovieToFavorites).RequireAuthorization();
         movieGroup.MapGet(pattern: "/", handler: GetAllMovies);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
-        movieGroup.MapPut(pattern: "/", handler: UpdateMovieById);
+        movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/deletemoviefromfavorites", handler: DeleteMovieFromFavorites).RequireAuthorization();
         
         return application;

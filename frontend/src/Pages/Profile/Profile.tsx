@@ -19,8 +19,8 @@ import {PASSWORD_REGEX} from "../../Data/REGEX";
 import {RootState} from "../../store/LoginSlice";
 import {useNavigate} from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
-import LogOutButton from "../Button/LogOutButton/LogOutButton";
-import AdminPanelButton from "../Button/AdminPanelButton/AdminPanelButton";
+import LogOutButton from "../../Components/Button/LogOutButton/LogOutButton";
+import AdminPanelButton from "../../Components/AdminPanel/AdminPanelButton/AdminPanelButton";
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 

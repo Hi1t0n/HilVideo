@@ -1,8 +1,5 @@
 import {Button} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/LoginSlice";
-import {UserDataState} from "../../../store/UserDataSlice";
 
 interface Props{
     text: string

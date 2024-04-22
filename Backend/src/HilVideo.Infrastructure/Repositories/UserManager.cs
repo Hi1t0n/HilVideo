@@ -5,7 +5,6 @@ using UserService.Domain.Contracts;
 using UserService.Domain.Models;
 using UserService.Infrastructure.Context;
 using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Authorization;
 using UserService.Infrastructure.ErrorObjects;
 
 namespace UserService.Infrastructure.Repositories;
@@ -187,5 +186,84 @@ public class UserManager : IUserManager
             existingUser.RoleName, existingUser.Email, existingUser.PhoneNumber, existingUser.CreatedDate);
         
         return Result.Success<GetUserByLoginResponse, IError>(userResponse);
+    }
+    
+    /// <summary>
+    /// Назначить пользователя администратором
+    /// </summary>
+    /// <param name="login">Логин пользователя</param>
+    /// <returns></returns>
+    public async Task<Result<User, IError>> MakeUserAnAdminByLogin(string login)
+    {
+        var user = await _context.Users.Where(x => x.Login == login.ToLower()).FirstOrDefaultAsync();
+
+        if (user is null)
+        {
+            return Result.Failure<User, IError>(new NotFoundError("Пользователь не найден"));
+        }
+
+        var ownerRoleId = await _context.Roles.Where(x => x.RoleName == "Owner").Select(x => x.RoleId)
+            .FirstOrDefaultAsync();
+
+        if (user.RoleId == ownerRoleId)
+        {
+            return Result.Failure<User, IError>(
+                new BadRequestError("Этого пользователя нельзя назначить администратором"));
+        }
+
+        var adminRoleId = await _context.Roles.Where(x => x.RoleName == "Admin").Select(x => x.RoleId)
+            .FirstOrDefaultAsync();
+        
+        if (user.RoleId == adminRoleId)
+        {
+            return Result.Failure<User, IError>(
+                new BadRequestError("Это уже администратор"));
+        }
+
+        user.RoleId = adminRoleId;
+
+        
+
+        _context.Update(user);
+        await _context.SaveChangesAsync();
+
+        return Result.Success<User, IError>(user);
+    }
+
+    public async Task<Result<User, IError>> RemoveUserAnAdminByLogin(string login)
+    {
+        var user = await _context.Users.Where(x => x.Login == login.ToLower()).FirstOrDefaultAsync();
+
+        if (user is null)
+        {
+            return Result.Failure<User, IError>(new NotFoundError("Пользователь не найден"));
+        }
+
+        var ownerRoleId = await _context.Roles.Where(x => x.RoleName == "Owner").Select(x => x.RoleId)
+            .FirstOrDefaultAsync();
+
+        if (user.RoleId == ownerRoleId)
+        {
+            return Result.Failure<User, IError>(
+                new BadRequestError("Этого пользователя нельзя снять с админки"));
+        }
+
+        var userRoleId = await _context.Roles.Where(x => x.RoleName == "User").Select(x => x.RoleId)
+            .FirstOrDefaultAsync();
+        
+        if (user.RoleId == userRoleId)
+        {
+            return Result.Failure<User, IError>(
+                new BadRequestError("Это не администратор"));
+        }
+
+        user.RoleId = userRoleId;
+
+        
+
+        _context.Update(user);
+        await _context.SaveChangesAsync();
+
+        return Result.Success<User, IError>(user);
     }
 }

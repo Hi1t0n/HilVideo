@@ -1,6 +1,6 @@
-import TextInput from "../Input/TextInput/TextInput";
+import TextInput from "../../Components/Input/TextInput/TextInput";
 import React, {useState} from "react";
-import Button from "../Button/Button";
+import Button from "../../Components/Button/Button";
 import axios, {AxiosError} from "axios";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
