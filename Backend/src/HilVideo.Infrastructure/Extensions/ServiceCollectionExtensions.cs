@@ -11,6 +11,7 @@ using UserService.Infrastructure.Context;
 using UserService.Infrastructure.Repositories;
 using AuthService.Infrastructure;
 using Infrastructure.Helpers;
+using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Extensions;
 
@@ -36,6 +37,8 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IWordsTranslate, WordsTranslate>();
         serviceCollection.AddScoped<ISorting, Sorting>();
         serviceCollection.AddScoped<IMovieManager, MovieManager>();
+        serviceCollection.AddScoped<IGenreManager, GenreManager>();
+        serviceCollection.AddScoped<IDirectorManager, DirectorManager>();
         
         return serviceCollection;
     }

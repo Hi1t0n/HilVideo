@@ -30,6 +30,8 @@ app.UseCors(allowCorsPolicy);
 app.AddUserRouter();
 app.AddAuthRouting();
 app.AddMovieRouting();
+app.AddGenreRouting();
+app.AddDirectorRouting();
 
 if (app.Environment.IsDevelopment())
 {

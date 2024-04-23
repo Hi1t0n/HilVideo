@@ -12,13 +12,12 @@ import color from "../../function/randomColor";
 import {useSelector} from "react-redux";
 import {UserDataState} from "../../store/UserDataSlice";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {ChangeUserPasswordRequest} from "../../Data/ChangeUserPasswordRequest";
 import axios, {AxiosError} from "axios";
 import {PASSWORD_REGEX} from "../../Data/REGEX";
 import {RootState} from "../../store/LoginSlice";
 import {useNavigate} from "react-router-dom";
-import LogoutIcon from '@mui/icons-material/Logout';
 import LogOutButton from "../../Components/Button/LogOutButton/LogOutButton";
 import AdminPanelButton from "../../Components/AdminPanel/AdminPanelButton/AdminPanelButton";
 
