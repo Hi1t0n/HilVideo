@@ -8,16 +8,21 @@ using UserService.Infrastructure.ErrorObjects;
 
 namespace UserService.Infrastructure.Repositories;
 
+/// <summary>
+///     Реализация интерфейса <see cref="IUserManager"/>
+/// </summary>
 public class DirectorManager : IDirectorManager
 {
 
     private readonly ApplicationDbContext _context;
-
+    
+    /// <inheritdoc cref="IUserManager"/>
     public DirectorManager(ApplicationDbContext context)
     {
         _context = context;
     }
     
+    /// <inheritdoc />
     public async Task<Result<Director, IError>> AddDirectorAsync(AddDirectorRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.SecondName))
@@ -39,15 +44,17 @@ public class DirectorManager : IDirectorManager
         return Result.Success<Director, IError>(director);
 
     }
-
+    
+    /// <inheritdoc />
     public async Task<Result<List<DirectorResponse>>> GetAllDirectorsAsync()
     {
         var directors = await _context.Directors
-            .Select(x => new DirectorResponse(x.DirectorId, x.FirstName, x.SecondName, x.Patronymic)).ToListAsync();
+            .Select(x => new DirectorResponse(x.DirectorId, x.FirstName, x.SecondName, x.Patronymic)).AsNoTracking().ToListAsync();
 
         return Result.Success(directors);
     }
-
+    
+    /// <inheritdoc />
     public async Task<Result<Director, IError>> UpdateDirectorByIdAsync(UpdateDirectorRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.SecondName))
@@ -71,7 +78,8 @@ public class DirectorManager : IDirectorManager
 
         return Result.Success<Director, IError>(director);
     }
-
+    
+    /// <inheritdoc />
     public async Task<Result<Director, IError>> DeleteDirectorByIdAsync(Guid id)
     {
         var director = await _context.Directors.Where(x => x.DirectorId == id).FirstOrDefaultAsync();

@@ -8,15 +8,20 @@ using UserService.Infrastructure.ErrorObjects;
 
 namespace UserService.Infrastructure.Repositories;
 
+/// <summary>
+///     Реализация интерфейса <see cref="IGenreManager"/>
+/// </summary>
 public class GenreManager : IGenreManager
 {
     private readonly ApplicationDbContext _context;
     
+    /// <inheritdoc cref="IGenreManager"/>
     public GenreManager(ApplicationDbContext context)
     {
         _context = context;
     }
     
+    /// <inheritdoc />
     public async Task<Result<Genre, IError >> AddGenreAsync(string? genreName)
     {
         if (string.IsNullOrWhiteSpace(genreName))
@@ -34,7 +39,8 @@ public class GenreManager : IGenreManager
 
         return Result.Success<Genre, IError>(entry.Entity);
     }
-
+    
+    /// <inheritdoc />
     public async Task<Result<List<GenreResponse>>> GetAllGenresAsync()
     {
         var genres = await _context.Genres.Select(x => new GenreResponse(x.GenreId, x.GenreName)).ToListAsync();
@@ -42,6 +48,7 @@ public class GenreManager : IGenreManager
         return Result.Success(genres);
     }
 
+    /// <inheritdoc />
     public async Task<Result<Genre, IError>> UpdateGenreByIdAsync(UpdateGenreRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.NewName))
@@ -65,6 +72,7 @@ public class GenreManager : IGenreManager
 
     }
 
+    /// <inheritdoc />
     public async Task<Result<Genre, IError>> DeleteGenreByIdAsync(Guid id)
     {
         var genre = await _context.Genres.Where(x => x.GenreId == id).FirstOrDefaultAsync();
