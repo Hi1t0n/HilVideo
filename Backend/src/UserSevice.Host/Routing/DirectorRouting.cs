@@ -22,7 +22,7 @@ public static class DirectorRouting
         directorGroup.MapPost(pattern: "/", handler: AddDirectorAsync);
         directorGroup.MapGet(pattern: "/", handler: GetAllDirectorsAsync);
         directorGroup.MapPut(pattern: "/", handler: UpdateDirectorByIdAsync);
-        directorGroup.MapDelete(pattern: "/", handler: DeleteDirectorByIdAsync);
+        directorGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteDirectorByIdAsync);
 
         return application;
     }

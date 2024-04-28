@@ -22,7 +22,7 @@ public static class GenreRouting
         genreGroup.MapPost(pattern: "/", handler: AddGenreAsync);
         genreGroup.MapGet(pattern: "/", handler: GetAllGenresAsync);
         genreGroup.MapPut(pattern: "/", handler: UpdateGenreByIdAsync);
-        genreGroup.MapDelete(pattern: "/", handler: DeleteGenreByIdAsync);
+        genreGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteGenreByIdAsync);
         
         return application;
     }

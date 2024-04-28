@@ -16,12 +16,8 @@ import React, {useState} from "react";
 import {ChangeUserPasswordRequest} from "../../Data/ChangeUserPasswordRequest";
 import axios, {AxiosError} from "axios";
 import {PASSWORD_REGEX} from "../../Data/REGEX";
-import {RootState} from "../../store/LoginSlice";
-import {useNavigate} from "react-router-dom";
 import LogOutButton from "../../Components/Button/LogOutButton/LogOutButton";
 import AdminPanelButton from "../../Components/AdminPanel/AdminPanelButton/AdminPanelButton";
-import {useGetGenresQuery, useAddGenresMutation} from "../../store/Api/genresApi";
-import { Genre } from "../../types/Genre";
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 
@@ -34,10 +30,6 @@ function Profile() {
 
     // @ts-ignore
     const userData = useSelector((state: UserDataState)=> state.userData);
-    // @ts-ignore
-    const isLogin = useSelector((state : RootState) => state.login.isLogin);
-    const navigate = useNavigate();
-
     const possibleRoles = ['Owner', 'Admin'];
 
     const handleCurrentPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
