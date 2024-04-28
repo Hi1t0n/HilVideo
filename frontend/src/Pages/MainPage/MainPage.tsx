@@ -4,19 +4,17 @@ import {Outlet} from "react-router-dom";
 
 function MainPage(){
     return(
-        <body>
+        <div>
             <div>
-                <div>
-                    <Header></Header>
-                </div>
-                <div>
-                    <Outlet/>
-                </div>
-                <div>
-                    <Footer></Footer>
-                </div>
+                <Header></Header>
             </div>
-        </body>
+            <div>
+                <Outlet/>
+            </div>
+            <div>
+                <Footer></Footer>
+            </div>
+        </div>
     );
 }
 
