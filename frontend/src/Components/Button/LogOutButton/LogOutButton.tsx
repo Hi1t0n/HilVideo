@@ -3,9 +3,8 @@ import {Button} from "@mui/material";
 import React from "react";
 import axios, {AxiosError} from "axios";
 import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState, setLoginState} from "../../../store/LoginSlice";
-import {UserDataState} from "../../../store/UserDataSlice";
+import {useDispatch} from "react-redux";
+import {setLoginState} from "../../../store/LoginSlice";
 import {persistor} from "../../../store/store";
 
 interface Props{

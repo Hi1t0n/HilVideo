@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile/Profile";
 import RequiredAuth from "./hoc/RequiredAuth";
 import RequiredAuthAndOwnerOrAdminRole from "./hoc/RequiredAuthAndOwnerOrAdminRole";
 import AdminPanel from "./Pages/AdminPanel/AdminPanel";
+import AddMoviePage from "./Pages/AdminPages/AddMoviePage";
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
                     </RequiredAuthAndOwnerOrAdminRole>
                 }>
                     <Route path={"movie"}>
-                        <Route path={"add"}/>
+                        <Route path={"add"} element={<AddMoviePage/>}/>
                         <Route path={"delete"}/>
                     </Route>
                     <Route path={"admin"}>
