@@ -49,7 +49,7 @@ public class DirectorManager : IDirectorManager
     public async Task<Result<List<DirectorResponse>>> GetAllDirectorsAsync()
     {
         var directors = await _context.Directors
-            .Select(x => new DirectorResponse(x.DirectorId, x.FirstName, x.SecondName, x.Patronymic)).AsNoTracking().ToListAsync();
+            .Select(x => new DirectorResponse(x.DirectorId, $"{x.FirstName} {x.SecondName} {x.Patronymic}")).AsNoTracking().ToListAsync();
 
         return Result.Success(directors);
     }

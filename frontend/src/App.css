@@ -6,5 +6,24 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box; /* Устанавливает box-sizing на border-box для всех элементов */
+  font-family: inherit; /* Наследует шрифт от родительского элемента */
+  line-height: inherit; /* Наследует высоту строки от родительского элемента */
+  list-style: none; /* Убирает маркеры у списка */
+  text-decoration: none; /* Убирает подчеркивание у ссылок */
+  outline: none; /* Убирает обводку при фокусе */
+  -webkit-tap-highlight-color: transparent; /* Убирает подсветку при клике в Safari */
+  -webkit-appearance: none; /* Убирает стили по умолчанию в Safari */
+  -moz-appearance: none; /* Убирает стили по умолчанию в Firefox */
+  -ms-appearance: none; /* Убирает стили по умолчанию в IE/Edge */
+  appearance: none; /* Убирает стили по умолчанию */
+  -webkit-font-smoothing: antialiased; /* Сглаживание шрифтов в Chrome и Safari */
+  -moz-osx-font-smoothing: grayscale; /* Сглаживание шрифтов в Firefox на macOS */
+  -webkit-text-size-adjust: 100%; /* Убирает автоматическое изменение размера шрифта в iOS */
+  -webkit-user-select: none; /* Запрещает выделение текста */
+  -moz-user-select: none; /* Запрещает выделение текста */
+  -ms-user-select: none; /* Запрещает выделение текста */
+  user-select: none; /* Запрещает выделение текста */
+  cursor: default; /* Устанавливает стандартный курсор для элементов */
 }
 

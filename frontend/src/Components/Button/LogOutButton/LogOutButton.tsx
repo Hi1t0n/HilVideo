@@ -29,6 +29,7 @@ function LogOutButton({ text }: Props){
             if(response.status === 200){
                 dispatch(setLoginState(false));
                 await persistor.flush();
+
                 navigate('/');
             }
         } catch (error){

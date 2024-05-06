@@ -5,7 +5,8 @@ import './AdminPanel.css'
 function AdminPanel(){
     return(
         <>
-            <Sidebar/>
+            {/*<Sidebar/>*/}
+
             <Outlet/>
         </>
     )

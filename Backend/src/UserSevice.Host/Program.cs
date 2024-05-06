@@ -29,7 +29,7 @@ app.UseCors(allowCorsPolicy);
 
 app.AddUserRouter();
 app.AddAuthRouting();
-app.AddMovieRouting();
+app.AddMovieRouting(); 
 app.AddGenreRouting();
 app.AddDirectorRouting();
 

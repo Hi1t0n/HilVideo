@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+label {
+    color: #666;
+    display: block;
+    margin-bottom: 5px;
+    padding-top: 5px;
+    font-family: "Poppins", sans-serif;
+}
+
+.wrapper{
+    width: 100vw;
+    height: 100vh;
+    padding-left: 20px;
+    display: flex;
+}
+
+.content{
+    flex: 1;
+}
+
+.add-movie-button{
+    font-family: "Poppins", sans-serif;
+    cursor: pointer ;
+
+}
+
+.movie-input{
+    min-height: 30px;
+    min-width: 200px;
+    background-color: #ffffff;
+    border-color: unset;
+    border-radius: 4px;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 8px;
+
+}
+.movie-input::placeholder{
+    color: #494949;
+    font-family: "Poppins", sans-serif;
+
+}
+
+.movie-textarea{
+    min-height: 100px;
+    min-width: 200px;
+    background-color: #ffffff;
+    resize: none;
+    border-radius: 4px;
+    font-family: "Poppins", sans-serif;
+}
+
+.movie-textarea::placeholder{
+    color: #494949;
+    font-family: "Poppins", sans-serif;
+}
+
+.form-name{
+    font-family: "Poppins", sans-serif;
+}
+
+.file-input{
+    cursor: pointer;
+}
