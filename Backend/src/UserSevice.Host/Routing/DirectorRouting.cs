@@ -19,10 +19,10 @@ public static class DirectorRouting
     {
         var directorGroup = application.MapGroup("/api/directors");
 
-        directorGroup.MapPost(pattern: "/", handler: AddDirectorAsync);
+        directorGroup.MapPost(pattern: "/", handler: AddDirectorAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         directorGroup.MapGet(pattern: "/", handler: GetAllDirectorsAsync);
-        directorGroup.MapPut(pattern: "/", handler: UpdateDirectorByIdAsync);
-        directorGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteDirectorByIdAsync);
+        directorGroup.MapPut(pattern: "/", handler: UpdateDirectorByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        directorGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteDirectorByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
 
         return application;
     }

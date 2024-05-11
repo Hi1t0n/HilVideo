@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using UserService.Domain.Contracts;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.ErrorObjects;
@@ -17,23 +18,36 @@ public static class MovieRouting
         movieGroup.MapGet(pattern: "/", handler: GetAllMovies);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
         movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        movieGroup.MapDelete(pattern: "/", handler: DeleteMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/deletemoviefromfavorites", handler: DeleteMovieFromFavorites).RequireAuthorization();
         
         return application;
     }
 
-    public static async Task<IResult> AddMovie(AddMovieRequest request, IMovieManager movieManager, HttpContext context)
+    public static async Task<IResult> AddMovie(IMovieManager movieManager, HttpContext context)
     {
-        AddMovieWithFileRequest data = new
+        var form = await context.Request.ReadFormAsync();
+        var movieName = form["MovieName"];
+        var movieDescription = form["MovieDescription"];
+        var movieType = Guid.Parse(form["MovieType"]!);
+        var releaseDate = DateTime.Parse(form["ReleaseDate"]!).ToUniversalTime();
+        var directors = JsonConvert.DeserializeObject<List<Guid>>(form["Directors"]);
+        var genres = JsonConvert.DeserializeObject<List<Guid>>(form["Genres"]);
+        var posterFile = form.Files.GetFile("Poster");
+        var movieFile = form.Files.GetFile("Movie");
+
+
+
+        AddMovieRequest data = new AddMovieRequest
         (
-            MovieName: request.MovieName,
-            MovieDescription: request.MovieDescription,
-            MovieType: request.MovieType,
-            ReleaseData: request.ReleaseDate,
-            PosterFile: context.Request.Form.Files.GetFile("poster"),
-            MovieFile: context.Request.Form.Files.GetFile("Movies"),
-            Directors: request.Directors,
-            Genres: request.Genres
+            movieName,
+            movieDescription,
+            movieType,
+            releaseDate,
+            posterFile,
+            movieFile,
+            directors,
+            genres
         );
         
         var result = await movieManager.AddMovieAsync(data);
@@ -113,10 +127,23 @@ public static class MovieRouting
         return Results.Ok(result.Value);
     }
     
-    //TODO: API Удаления
-    public static async Task<IResult> DeleteMovieById(Guid id)
+    public static async Task<IResult> DeleteMovieById(Guid id, IMovieManager movieManager)
     {
-        throw new Exception();
+        var result = await movieManager.DeleteMovieByIdAsync(id);
+
+        if (result.IsFailure)
+        {
+            switch (result.Error)
+            {
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
+        }
+
+        return Results.Ok();
     }
 
     public static async Task<IResult> DeleteMovieFromFavorites([FromBody] MovieToFavoriteRequest request,

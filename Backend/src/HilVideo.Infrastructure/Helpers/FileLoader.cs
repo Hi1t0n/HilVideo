@@ -6,8 +6,8 @@ namespace Infrastructure.Helpers;
 
 public class FileLoader : IFileLoader
 {
-    private const string VideoFilePath = @"..\..\..\..\..\data\Movies\"; /* Путь для сохранения фильмов */
-    private const string ImageFilePath = @"..\..\..\..\..\data\Posters\"; /* Путь для сохранения фильмов */
+    private const string VideoFilePath = @"..\..\..\data\Movies\"; /* Путь для сохранения фильмов */
+    private const string ImageFilePath = @"..\..\..\data\Posters\"; /* Путь для сохранения фильмов */
     private IWordsTranslate _wordsTranslate;
     public FileLoader(IWordsTranslate wordsTranslate)
     {
@@ -35,7 +35,7 @@ public class FileLoader : IFileLoader
             await file.CopyToAsync(stream);
         }
 
-        return Result.Success(filePath);
+        return Result.Success(Path.GetFullPath(filePath));
     }
     
     /// <summary>
@@ -59,6 +59,6 @@ public class FileLoader : IFileLoader
             await file.CopyToAsync(stream);
         }
 
-        return Result.Success(filePath);
+        return Result.Success(Path.GetFullPath(filePath));
     }
 }

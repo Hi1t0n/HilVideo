@@ -8,25 +8,27 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import {Director} from "../../types/DirectorsTypes";
 import {Genre} from "../../types/GenresTypes";
+import {MovieType} from "../../types/MovieTypeTypes";
 
 interface Props {
-    data: Genre[] | Director[];
+    data: Genre[] | Director[] | MovieType[];
     handleChange: (event: SelectChangeEvent<string[]>) => void;
     multiple: boolean;
+    required: boolean;
     placeholder: string;
-    selectedData: string[]
+    selectedData: string[];
 }
 
-const SelectCheckBox: React.FC<Props> = ({ data, handleChange, multiple, placeholder, selectedData }) => {
+const SelectCheckBox: React.FC<Props> = ({ data, handleChange, multiple, required, placeholder, selectedData }) => {
 
 
     return (
-            <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <FormControl sx={{ m: 1, minWidth: 200 }} required={required}>
                 <InputLabel id={`select_${placeholder}`}>{placeholder}</InputLabel>
                 <Select
                     labelId={`select_${placeholder}`}
                     id={`select_${placeholder}`}
-                    multiple
+                    multiple={multiple}
                     value={selectedData}
                     onChange={handleChange}
                     input={<OutlinedInput label={placeholder} />}

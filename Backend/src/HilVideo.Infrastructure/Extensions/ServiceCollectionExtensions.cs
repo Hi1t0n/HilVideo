@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IMovieManager, MovieManager>();
         serviceCollection.AddScoped<IGenreManager, GenreManager>();
         serviceCollection.AddScoped<IDirectorManager, DirectorManager>();
+        serviceCollection.AddScoped<IMovieTypeManager, MovieTypeManager>();
         
         return serviceCollection;
     }

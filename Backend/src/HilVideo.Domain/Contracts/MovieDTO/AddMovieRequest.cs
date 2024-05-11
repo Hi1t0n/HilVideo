@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace UserService.Domain.Contracts;
 
-public record AddMovieRequest(string MovieName, string MovieDescription, Guid MovieType,DateTime ReleaseDate, List<Guid> Directors, List<Guid> Genres);
+public record AddMovieRequest(string MovieName, string MovieDescription, Guid MovieType,DateTime ReleaseData,IFormFile? PosterFile, IFormFile? MovieFile, List<Guid> Directors, List<Guid> Genres);

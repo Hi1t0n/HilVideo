@@ -25,45 +25,45 @@ public class MovieManager : IMovieManager
     /// <summary>
     /// Добавление фильма
     /// </summary>
-    /// <param name="withFileRequest">Данные для добавления фильма</param>
+    /// <param name="request">Данные для добавления фильма</param>
     /// <returns>Статус</returns>
-    public async Task<Result<AddMovieWithFileRequest, IError>> AddMovieAsync(AddMovieWithFileRequest withFileRequest)
+    public async Task<Result<AddMovieRequest, IError>> AddMovieAsync(AddMovieRequest request)
     {
-        if (string.IsNullOrWhiteSpace(withFileRequest.MovieName))
+        if (string.IsNullOrWhiteSpace(request.MovieName))
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Введите название фильма"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Введите название фильма"));
         }
         
-        if (string.IsNullOrWhiteSpace(withFileRequest.MovieDescription))
+        if (string.IsNullOrWhiteSpace(request.MovieDescription))
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Введите описание"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Введите описание"));
         }
         
-        if (string.IsNullOrWhiteSpace(withFileRequest.MovieType.ToString()))
+        if (string.IsNullOrWhiteSpace(request.MovieType.ToString()))
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Выберите тип"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите тип"));
         }
 
-        if (withFileRequest.Directors.Count == 0)
+        if (request.Directors.Count == 0)
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Выберите режиссера"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите режиссера"));
         }
 
-        if (withFileRequest.Genres.Count == 0)
+        if (request.Genres.Count == 0)
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Выберите жанр"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите жанр"));
         }
 
-        var movieFilePath = await _fileLoader.LoadVideoFileAsync(withFileRequest.MovieFile, withFileRequest.MovieName);
+        var movieFilePath = await _fileLoader.LoadVideoFileAsync(request.MovieFile, request.MovieName);
         if (movieFilePath.IsFailure)
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError($"{movieFilePath.Error}"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError($"{movieFilePath.Error}"));
         }
         
-        var posterFilePath = await _fileLoader.LoadImageFileAsync(withFileRequest.PosterFile, withFileRequest.MovieName);
+        var posterFilePath = await _fileLoader.LoadImageFileAsync(request.PosterFile, request.MovieName);
         if (movieFilePath.IsFailure)
         {
-            return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError($"{posterFilePath.Error}"));
+            return Result.Failure<AddMovieRequest, IError>(new BadRequestError($"{posterFilePath.Error}"));
         }
 
         using (var transaction = await _context.Database.BeginTransactionAsync())
@@ -73,11 +73,11 @@ public class MovieManager : IMovieManager
                 var movie = new Movie
                 {
                     MovieId = Guid.NewGuid(),
-                    MovieName = withFileRequest.MovieName,
-                    MovieDescription = withFileRequest.MovieDescription,
+                    MovieName = request.MovieName,
+                    MovieDescription = request.MovieDescription,
                     PosterFilePath = posterFilePath.Value,
-                    MovieTypeId = withFileRequest.MovieType,
-                    ReleaseDate = withFileRequest.ReleaseData
+                    MovieTypeId = request.MovieType,
+                    ReleaseDate = request.ReleaseData
                 };
 
                 await _context.Movies.AddAsync(movie);
@@ -91,7 +91,7 @@ public class MovieManager : IMovieManager
 
                 await _context.MovieFiles.AddAsync(movieFile);
 
-                var movieGenres = withFileRequest.Genres.Select(genre => new MovieGenre
+                var movieGenres = request.Genres.Select(genre => new MovieGenre
                 {
                     MovieId = movie.MovieId,
                     GenreId = genre
@@ -99,7 +99,7 @@ public class MovieManager : IMovieManager
 
                 await _context.MoviesGenres.AddRangeAsync(movieGenres);
 
-                var movieDirectors = withFileRequest.Directors.Select(director => new MovieDirector
+                var movieDirectors = request.Directors.Select(director => new MovieDirector
                 {
                     MovieId = movie.MovieId,
                     DirectorId = director
@@ -114,10 +114,10 @@ public class MovieManager : IMovieManager
             catch (Exception e)
             {
                 await transaction.RollbackAsync();
-                return Result.Failure<AddMovieWithFileRequest, IError>(new BadRequestError("Что-то пошло не так")); 
+                return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Что-то пошло не так")); 
             }
 
-            return Result.Success<AddMovieWithFileRequest,IError>(withFileRequest);
+            return Result.Success<AddMovieRequest,IError>(request);
         }
     }
     
@@ -217,7 +217,15 @@ public class MovieManager : IMovieManager
 
     public async Task<Result<Movie, IError>> DeleteMovieByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var movie = await _context.Movies.FirstOrDefaultAsync(x => x.MovieId == id);
+        if (movie is null)
+        {
+            return Result.Failure<Movie, IError>(new NotFoundError("Фильм не найлен"));
+        }
+
+        _context.Movies.Remove(movie);
+        await _context.SaveChangesAsync();
+        return Result.Success<Movie, IError>(movie);
     }
 
     public async Task<Result<Movie, IError>> UpdateMovieByIdAsync(UpdateMovieRequest request)

@@ -17,5 +17,6 @@ public class MovieFileConfiguration : IEntityTypeConfiguration<MovieFile>
         builder.Property(mf => mf.MovieId).IsRequired();
         builder.Property(mf => mf.FilePath).IsRequired();
         builder.HasIndex(mf => mf.FilePath).IsUnique();
+        builder.Property(mf => mf.EpisodNumber).HasDefaultValue(1);
     }
 }

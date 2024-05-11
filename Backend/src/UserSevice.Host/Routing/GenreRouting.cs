@@ -19,10 +19,10 @@ public static class GenreRouting
     {
         var genreGroup = application.MapGroup("/api/genres");
 
-        genreGroup.MapPost(pattern: "/", handler: AddGenreAsync);
+        genreGroup.MapPost(pattern: "/", handler: AddGenreAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         genreGroup.MapGet(pattern: "/", handler: GetAllGenresAsync);
-        genreGroup.MapPut(pattern: "/", handler: UpdateGenreByIdAsync);
-        genreGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteGenreByIdAsync);
+        genreGroup.MapPut(pattern: "/", handler: UpdateGenreByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        genreGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteGenreByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         
         return application;
     }

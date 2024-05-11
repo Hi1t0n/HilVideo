@@ -32,6 +32,7 @@ app.AddAuthRouting();
 app.AddMovieRouting(); 
 app.AddGenreRouting();
 app.AddDirectorRouting();
+app.AddMovieTypeRouting();
 
 if (app.Environment.IsDevelopment())
 {
