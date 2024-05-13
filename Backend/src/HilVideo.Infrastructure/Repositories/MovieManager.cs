@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Infrastructure.Helpers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using UserService.Domain.Interfaces;
@@ -13,12 +14,12 @@ namespace UserService.Infrastructure.Repositories;
 public class MovieManager : IMovieManager
 {
     private readonly ApplicationDbContext _context;
-    private readonly IFileLoader _fileLoader;
+    private readonly IFileHelper _fileHelper;
     private readonly ISorting _sorting;
-    public MovieManager(ApplicationDbContext context, IFileLoader fileLoader, ISorting sorting)
+    public MovieManager(ApplicationDbContext context, IFileHelper fileHelper, ISorting sorting)
     {
         _context = context;
-        _fileLoader = fileLoader;
+        _fileHelper = fileHelper;
         _sorting = sorting;
     }
     
@@ -54,13 +55,13 @@ public class MovieManager : IMovieManager
             return Result.Failure<AddMovieRequest, IError>(new BadRequestError("Выберите жанр"));
         }
 
-        var movieFilePath = await _fileLoader.LoadVideoFileAsync(request.MovieFile, request.MovieName);
+        var movieFilePath = await _fileHelper.LoadVideoFileAsync(request.MovieFile, request.MovieName);
         if (movieFilePath.IsFailure)
         {
             return Result.Failure<AddMovieRequest, IError>(new BadRequestError($"{movieFilePath.Error}"));
         }
         
-        var posterFilePath = await _fileLoader.LoadImageFileAsync(request.PosterFile, request.MovieName);
+        var posterFilePath = await _fileHelper.LoadImageFileAsync(request.PosterFile, request.MovieName);
         if (movieFilePath.IsFailure)
         {
             return Result.Failure<AddMovieRequest, IError>(new BadRequestError($"{posterFilePath.Error}"));
@@ -217,12 +218,18 @@ public class MovieManager : IMovieManager
 
     public async Task<Result<Movie, IError>> DeleteMovieByIdAsync(Guid id)
     {
-        var movie = await _context.Movies.FirstOrDefaultAsync(x => x.MovieId == id);
+        var movie = await _context.Movies
+            .Include(x => x.MovieFiles)
+            .FirstOrDefaultAsync(x => x.MovieId == id);
         if (movie is null)
         {
             return Result.Failure<Movie, IError>(new NotFoundError("Фильм не найлен"));
         }
 
+        var movieFiles = movie.MovieFiles.Select(x => x.FilePath).ToList();
+        movieFiles.Add(movie.PosterFilePath);
+        _fileHelper.DeleteFilesByPath(movieFiles);
+        
         _context.Movies.Remove(movie);
         await _context.SaveChangesAsync();
         return Result.Success<Movie, IError>(movie);

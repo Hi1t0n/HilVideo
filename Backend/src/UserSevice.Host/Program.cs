@@ -1,5 +1,6 @@
 using AuthService.Infrastructure;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http.Features;
 using UserService.Infrastructure.Extensions;
 using UserSevice.Host.Routing;
 
@@ -9,6 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.AddBusinessLogic(builder.Configuration, connectionString);
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = long.MaxValue);
 const string allowCorsPolicy = "allowCorsPolicy";
 builder.Services.AddCors(options =>
 {
@@ -22,8 +24,13 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = long.MaxValue;
+});
 
 var app = builder.Build();
+
 
 app.UseCors(allowCorsPolicy);
 

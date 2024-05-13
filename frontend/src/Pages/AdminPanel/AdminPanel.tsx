@@ -4,11 +4,14 @@ import './AdminPanel.css'
 
 function AdminPanel(){
     return(
-        <>
-            {/*<Sidebar/>*/}
-
-            <Outlet/>
-        </>
+        <div className={"wrapper-admin"}>
+            <div className={"block"}>
+                <Sidebar/>
+            </div>
+            <div className={"block"}>
+                <Outlet/>
+            </div>
+        </div>
     )
 }
 

@@ -5,10 +5,13 @@ import {MovieType, UpdateMovieType} from "../../types/MovieTypeTypes";
 export const  movieTypeApi = createApi({
     reducerPath: 'movieTypeApi',
     tagTypes: ['MovieType'],
-    baseQuery: fetchBaseQuery({baseUrl:apiUrl}),
+    baseQuery: fetchBaseQuery({baseUrl:apiUrl, credentials: 'include'}),
     endpoints: (build) => ({
         getMovieType: build.query<MovieType[], void>({
-            query : () => 'movietype/',
+            query : () => ({
+                url:'movietype/',
+                method: 'GET',
+            }),
             providesTags: (result) =>
                 result
                     ? [

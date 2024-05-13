@@ -5,10 +5,13 @@ import {apiUrl} from "../../utils/constants";
 export const genresApi = createApi({
     reducerPath: 'genresApi',
     tagTypes: ['Genre'],
-    baseQuery: fetchBaseQuery({ baseUrl: apiUrl }),
+    baseQuery: fetchBaseQuery({ baseUrl: apiUrl, credentials: 'include'}, ),
     endpoints: (build) => ({
         getGenres: build.query<Genre[], void>({
-            query: () => 'genres/',
+            query: () => ({
+                url: 'genres/',
+                method: 'GET',
+            }),
             providesTags: (result) =>
                 result
                     ? [

@@ -18,9 +18,10 @@ function AddMoviePage(){
     const [description , setDescription] = useState("");
     const [releaseDate, setReleaseDate] = useState(new Date().toISOString());
 
-    const {data: genresData=[]} = useGetGenresQuery(undefined, {pollingInterval: 100000});
-    const {data: directorsData = [], } = useGetDirectorsQuery(undefined, {pollingInterval: 100000});
-    const {data: movieTypeData = [],  } = useGetMovieTypeQuery(undefined, {pollingInterval: 100000});
+
+    const {data: genresData=[], refetch: genresRefetch} = useGetGenresQuery(undefined, {pollingInterval: 600000});
+    const {data: directorsData = [], refetch: directorsRefetch } = useGetDirectorsQuery(undefined, {pollingInterval: 3000});
+    const {data: movieTypeData = [], refetch: movieTypeRefetch  } = useGetMovieTypeQuery(undefined, {pollingInterval: 3000});
 
     const PosterFileRef = useRef<HTMLInputElement | null>(null);
     const MovieFileRef = useRef<HTMLInputElement | null>(null);
@@ -83,7 +84,7 @@ function AddMoviePage(){
         formData.append('Movie', selectedMovieFile);
         formData.append('MovieName', movieName);
         formData.append("MovieType", selectedMovieType);
-        formData.append('MovieDescription', selectedMovieType);
+        formData.append('MovieDescription', description);
         formData.append('ReleaseDate', releaseDate);
         formData.append('Directors', JSON.stringify(selectedDirectors));
         formData.append('Genres', JSON.stringify(selectedGenres));

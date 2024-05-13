@@ -15,6 +15,7 @@ import loginReducer from "./LoginSlice";
 import userDataReducer from "./UserDataSlice";
 import {directorsApi} from "./Api/directorsApi";
 import {movieTypeApi} from "./Api/movieTypeApi";
+import {setupListeners} from "@reduxjs/toolkit/query";
 
 const rootReducer = combineReducers({
     login: loginReducer,
@@ -40,6 +41,8 @@ const store = configureStore({
             },
         }).concat(genresApi.middleware, directorsApi.middleware, movieTypeApi.middleware),
 })
+
+setupListeners(store.dispatch);
 
 export const persistor = persistStore(store)
 

@@ -1,0 +1,12 @@
+.wrapper-admin{
+    display: flex;
+
+    height:100vh;
+    width:100vw;
+    background-color: #eff4ff;
+}
+
+.block{
+    display: inline-block;
+
+}

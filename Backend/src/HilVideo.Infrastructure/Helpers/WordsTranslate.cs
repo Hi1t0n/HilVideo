@@ -53,7 +53,8 @@ public class WordsTranslate : IWordsTranslate
     {
         string result = "";
 
-        foreach (var ch in sourceWord)
+        
+        foreach (var ch in sourceWord.ToLower())
         {
             var ss = "";
             if (_dictionaryChar.TryGetValue(ch.ToString(), out ss))
