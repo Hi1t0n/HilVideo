@@ -1,6 +1,7 @@
 using AuthService.Infrastructure;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
 using UserService.Infrastructure.Extensions;
 using UserSevice.Host.Routing;
 
@@ -30,8 +31,12 @@ builder.Services.Configure<FormOptions>(options =>
 });
 
 var app = builder.Build();
-
-
+var staticFilePath = Path.Combine(AppContext.BaseDirectory, @"C:\Diplom\data\");
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(staticFilePath),
+    RequestPath = "/data"
+});
 app.UseCors(allowCorsPolicy);
 
 app.AddUserRouter();

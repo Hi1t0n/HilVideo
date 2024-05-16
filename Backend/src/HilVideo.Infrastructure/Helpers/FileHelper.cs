@@ -11,6 +11,7 @@ public class FileHelper : IFileHelper
 {
     private const string VideoFilePath = @"..\..\..\data\Movies\"; /* Путь для сохранения фильмов */
     private const string ImageFilePath = @"..\..\..\data\Posters\"; /* Путь для сохранения фильмов */
+    private const string MainFilePath = @"C:\Diplom\";
     private IWordsTranslate _wordsTranslate;
     public FileHelper(IWordsTranslate wordsTranslate)
     {
@@ -38,7 +39,7 @@ public class FileHelper : IFileHelper
             await file.CopyToAsync(stream);
         }
 
-        return Result.Success(Path.GetFullPath(filePath));
+        return Result.Success(Path.GetRelativePath(@"C:\Diplom\",filePath));
     }
     
     /// <summary>
@@ -62,16 +63,16 @@ public class FileHelper : IFileHelper
             await file.CopyToAsync(stream);
         }
 
-        return Result.Success(Path.GetFullPath(filePath));
+        return Result.Success(Path.GetRelativePath(@"C:\Diplom\",filePath));
     }
 
     public void DeleteFilesByPath(List<string> pathFiles)
     {
         foreach (var path in pathFiles)
         {
-            if (File.Exists(path))
+            if (File.Exists($"{MainFilePath}{path}"))
             {
-                File.Delete(path);
+                File.Delete($"{MainFilePath}{path}");
             }
         }
     }

@@ -8,6 +8,7 @@ import RequiredAuth from "./hoc/RequiredAuth";
 import RequiredAuthAndOwnerOrAdminRole from "./hoc/RequiredAuthAndOwnerOrAdminRole";
 import AdminPanel from "./Pages/AdminPanel/AdminPanel";
 import AddMoviePage from "./Pages/AdminPages/AddMoviePage";
+import MoviePage from "./Pages/MoviePage/MoviePage";
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
                             <Profile/>
                         </RequiredAuth>
                     }/>
+                    <Route path={"/movie/:id"} element={<MoviePage/>}/>
+
                 </Route>
                 <Route path={"/login"} element={<LoginForm/>}/>
                 <Route path={"/registration"} element={<RegistrationForm/>}/>

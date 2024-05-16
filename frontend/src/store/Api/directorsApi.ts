@@ -8,7 +8,10 @@ export const directorsApi = createApi({
     baseQuery: fetchBaseQuery({baseUrl: apiUrl}),
     endpoints: (build) => ({
         getDirectors: (build.query<Director[], void>) ({
-            query: () => 'directors/',
+            query: () => ({
+                url: 'directors/',
+                method: 'GET',
+            }),
             providesTags: (result) =>
                 result
                     ? [
@@ -17,6 +20,7 @@ export const directorsApi = createApi({
                     ]
                     : [],
         }),
+
         addDirectors: build.mutation({
             query: (request : AddDirectorRequest) => ({
                 url: 'directors/',

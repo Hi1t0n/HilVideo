@@ -21,7 +21,7 @@ function AddMoviePage(){
 
     const {data: genresData=[], refetch: genresRefetch} = useGetGenresQuery(undefined, {pollingInterval: 600000});
     const {data: directorsData = [], refetch: directorsRefetch } = useGetDirectorsQuery(undefined, {pollingInterval: 3000});
-    const {data: movieTypeData = [], refetch: movieTypeRefetch  } = useGetMovieTypeQuery(undefined, {pollingInterval: 3000});
+    const {data: movieTypeData = [], refetch: movieTypeRefetch  } = useGetMovieTypeQuery(undefined, {pollingInterval: 5000});
 
     const PosterFileRef = useRef<HTMLInputElement | null>(null);
     const MovieFileRef = useRef<HTMLInputElement | null>(null);
