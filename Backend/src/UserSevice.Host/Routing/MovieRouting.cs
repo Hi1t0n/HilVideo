@@ -15,7 +15,8 @@ public static class MovieRouting
 
         movieGroup.MapPost(pattern: "/", handler: AddMovie).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapPost(pattern: "/addmovietofavorites", handler: AddMovieToFavorites).RequireAuthorization();
-        movieGroup.MapGet(pattern: "/", handler: GetAllMovies);
+        movieGroup.MapGet(pattern: "/search", handler: GetSearchMovies);
+        movieGroup.MapGet(pattern: "/", handler: GetMoviesAsync);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
         movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/", handler: DeleteMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
@@ -68,18 +69,28 @@ public static class MovieRouting
         return Results.Created();
     }
 
-    public static async Task<IResult> GetAllMovies([FromQuery] string url, IMovieManager movieManager)
+    public static async Task<IResult> GetSearchMovies([FromQuery] string url, IMovieManager movieManager)
     {
         if (MovieSearchRequest.TryParse(url, out MovieSearchRequest request))
         {
-            var movies = await movieManager.GetAllMoviesAsync(request);
+            var movies = await movieManager.GetSearchMoviesAsync(request);
 
             return Results.Ok(movies.Value);
         }
         else
         {
-            return Results.BadRequest("Неверные параметры поиска");
+            return Results.BadRequest(new
+            {
+                error = "Неверные параметры поиска"
+            });
         }
+    }
+
+    public static async Task<IResult> GetMoviesAsync(IMovieManager movieManager)
+    {
+        var result = await movieManager.GetMoviesAsync();
+
+        return Results.Ok(result.Value);
     }
 
     public static async Task<IResult> GetMovieById(Guid id, IMovieManager movieManager)

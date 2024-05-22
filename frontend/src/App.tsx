@@ -9,6 +9,7 @@ import RequiredAuthAndOwnerOrAdminRole from "./hoc/RequiredAuthAndOwnerOrAdminRo
 import AdminPanel from "./Pages/AdminPanel/AdminPanel";
 import AddMoviePage from "./Pages/AdminPages/AddMoviePage";
 import MoviePage from "./Pages/MoviePage/MoviePage";
+import MainMoviesPage from "./Pages/mainMoviesPage/MainMoviesPage";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                             <Profile/>
                         </RequiredAuth>
                     }/>
+                    <Route path={"/"} element={<MainMoviesPage/>}/>
                     <Route path={"/movie/:id"} element={<MoviePage/>}/>
 
                 </Route>

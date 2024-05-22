@@ -2,7 +2,7 @@ using System.Web;
 
 namespace UserService.Domain.Contracts;
 
-public record MovieSearchRequest(string MovieName, List<Guid>? Genres, string? SortBy)
+public record MovieSearchRequest(string MovieName, List<Guid>? Genres, int SortBy)
 {
     public static bool TryParse(string url, out MovieSearchRequest result)
     {
@@ -12,8 +12,6 @@ public record MovieSearchRequest(string MovieName, List<Guid>? Genres, string? S
             return false;
         }
         
-        
-        
         try
         {
             var parsedUrl = url.Split('?')[1];
@@ -22,7 +20,7 @@ public record MovieSearchRequest(string MovieName, List<Guid>? Genres, string? S
             var movieName = paramsCollections["MovieName"];
             var genres = paramsCollections["Genres"]?.Split(',')
                 .Where(x => !string.IsNullOrEmpty(x) && !string.IsNullOrWhiteSpace(x)).Select(Guid.Parse).ToList();
-            var sortBy = paramsCollections["SortBy"];
+            var sortBy = Convert.ToInt16(paramsCollections["SortBy"]);
             
             result = new MovieSearchRequest(movieName, genres, sortBy);
             return true;

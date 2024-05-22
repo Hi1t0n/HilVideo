@@ -5,5 +5,5 @@ namespace UserService.Domain.Interfaces;
 
 public interface ISorting
 {
-    IQueryable<Movie> ApplySorting(IQueryable<Movie> queryable, SortBy sortBy = SortBy.SortByName);
+    IQueryable<Movie> ApplySorting(IQueryable<Movie> queryable, int sortBy = 1);
 }

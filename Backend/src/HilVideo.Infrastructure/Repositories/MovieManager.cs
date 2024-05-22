@@ -16,6 +16,8 @@ public class MovieManager : IMovieManager
     private readonly ApplicationDbContext _context;
     private readonly IFileHelper _fileHelper;
     private readonly ISorting _sorting;
+
+    private readonly int _getMovie = 9;
     public MovieManager(ApplicationDbContext context, IFileHelper fileHelper, ISorting sorting)
     {
         _context = context;
@@ -127,7 +129,7 @@ public class MovieManager : IMovieManager
     /// Получение всех фильмов 
     /// </summary>
     /// <returns>Список фильмов (Для рендеринга карточек фильмов на клиенте)</returns>
-    public async Task<Result<List<GetMoviesResponse>>> GetAllMoviesAsync(MovieSearchRequest request)
+    public async Task<Result<List<GetMoviesResponse>>> GetSearchMoviesAsync(MovieSearchRequest request)
     {
         var query = _context.Movies.AsQueryable();
 
@@ -140,14 +142,8 @@ public class MovieManager : IMovieManager
         {
             query = query.Where(m => m.MovieGenres.Any(mg => request.Genres.Contains(mg.GenreId)));
         }
-
-        if (!string.IsNullOrWhiteSpace(request.SortBy))
-        {
-            if (Enum.TryParse(request.SortBy, true, out SortBy sortBy))
-            {
-                query = _sorting.ApplySorting(query, sortBy);
-            }
-        }
+        
+        query = _sorting.ApplySorting(query, request.SortBy);
        
 
         var movieList = await query
@@ -175,7 +171,34 @@ public class MovieManager : IMovieManager
 
         return Result.Success(movieList);
     }
-    
+
+    public async Task<Result<List<GetMoviesResponse>>> GetMoviesAsync()
+    {
+        var movies = await _context.Movies
+            .Include(m => m.MovieDirectors)
+                .ThenInclude(md => md.Director)
+            .Include(m => m.MovieGenres)
+                .ThenInclude(mg => mg.Genre)
+            .Include(m => m.MovieType)
+                .ThenInclude(mt => mt.Movies)
+            .OrderByDescending(m=>m.ReleaseDate)
+            .Select(m => new GetMoviesResponse
+            (
+                m.MovieId,
+                m.MovieName,
+                m.MovieDescription,
+                m.PosterFilePath,
+                m.MovieType.MovieTypeName,
+                m.ReleaseDate,
+                m.MovieDirectors
+                    .Select(md =>
+                        $"{md.Director.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
+                    .ToList(),
+                m.MovieGenres.Select(mg => mg.Genre!.GenreName).ToList()
+            )).AsNoTracking().Take(_getMovie).ToListAsync();
+        return Result.Success(movies);
+    }
+
     /// <summary>
     /// Получение всех данных фильма по Id
     /// </summary>
@@ -325,18 +348,5 @@ public class MovieManager : IMovieManager
         _context.FavoriteMoviesUsers.Remove(existData);
         await _context.SaveChangesAsync();
         return Result.Success<FavoriteMoviesUsers, IError>(existData);
-    }
-    
-    /// <summary>
-    /// Загрузка фильма
-    /// </summary>
-    /// <param name="id"> Идентификатор фильма</param>
-    /// <returns>
-    ///     IError - ошибка
-    ///     string - путь файла на сервере для загрузки
-    /// </returns>
-    public async Task<Result<IError, string>> GetFilePathByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
     }
 }

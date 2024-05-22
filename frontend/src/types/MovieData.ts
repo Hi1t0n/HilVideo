@@ -13,3 +13,14 @@ export interface MovieFileDTO{
     filePath: string;
     episodNumber: number;
 }
+
+export interface Movies {
+    id: string;
+    movieName: string;
+    movieDescription: string;
+    posterFilePath: string;
+    movieType: string;
+    releaseDate: Date;
+    directors: string[];
+    genres: string[];
+}

@@ -6,15 +6,15 @@ namespace Infrastructure.Helpers;
 
 public class Sorting : ISorting
 {
-    public IQueryable<Movie> ApplySorting(IQueryable<Movie> queryable, SortBy sortBy = SortBy.SortByName)
+    public IQueryable<Movie> ApplySorting(IQueryable<Movie> queryable, int sortBy = 1)
     {
         switch (sortBy)
         {
-            case SortBy.SortByName:
+            case 1:
                 return queryable.OrderBy(m => m.MovieName);
-            case SortBy.SortByReliseDate:
+            case 2:
                 return queryable.OrderBy(m => m.ReleaseDate);
-            case SortBy.SortByReliseDateDesc:
+            case 3:
                 return queryable.OrderByDescending(m => m.ReleaseDate);
             default:
                 return queryable;

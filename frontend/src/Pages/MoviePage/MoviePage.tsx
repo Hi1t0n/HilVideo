@@ -9,7 +9,9 @@ function MoviePage(){
     const [movieData, setMovieData] = useState<Movie | null>(null);
     const [errorMessage , setErrorMessage] = useState<string | null>(null);
     const [releaseDate , setReleaseDate] = useState<Date | null>(null);
+
     const {id} = useParams();
+
     const getMovieById = async () => {
         try {
             const response = await axios.get<Movie>(`${apiUrl}movie/${id}`);
@@ -68,7 +70,13 @@ function MoviePage(){
                     </div>
                     <div className={"player-wrapper"}>
                         <Fragment>
-                            <ReactPlayer  url={`${url}${movieData.moviesFile[0].filePath}`} light controls playing className={"react-player"}/>
+                            <ReactPlayer
+                                url={`${url}${movieData.moviesFile[0].filePath}`}
+                                light={false}
+                                controls
+                                playing={false}
+                                className={"react-player"}
+                            />
                         </Fragment>
                     </div>
                 </>

@@ -1,0 +1,14 @@
+.MainMoviesPage-wrapper {
+    height: 100vh;
+    width: 100vw;
+    background: #ffffff;
+    padding: 0 !important; /* Убираем отступы */
+    margin: 0 !important; /* Убираем отступы */
+    overflow: hidden; /* Добавляем, чтобы избежать проблем с отступами */
+}
+
+.MainMoviesPage-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+}
