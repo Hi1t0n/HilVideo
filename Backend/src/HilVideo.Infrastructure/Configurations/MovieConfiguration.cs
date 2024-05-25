@@ -12,8 +12,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder.HasKey(m => m.MovieId);
-        builder.Property(m => m.MovieId).IsRequired();
         builder.HasIndex(m => m.MovieId).IsUnique();
+        builder.Property(m => m.MovieId).IsRequired();
         builder.Property(m => m.MovieName).IsRequired();
         builder.Property(m => m.MovieDescription).IsRequired();
         builder.Property(m => m.PosterFilePath).IsRequired();

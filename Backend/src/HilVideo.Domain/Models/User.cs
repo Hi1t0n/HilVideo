@@ -20,4 +20,6 @@ public class User
     public string CreatedDate { get; set; }
     public List<Movie> Movies { get; set; } = new();
     public List<FavoriteMoviesUsers> FavoriteMoviesUsers { get; set; } = new();
+    public List<Book> Books { get; set; } = new();
+    public List<FavoriteBooksUsers> FavoriteBooksUsers { get; set; } = new();
 }

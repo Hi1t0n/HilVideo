@@ -35,6 +35,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                     .HasForeignKey(fum => fum.UserId),
                 j => j.HasKey(fum => new { fum.UserId, fum.MovieId })
             );
+
+        builder.HasMany(u => u.Books)
+            .WithMany(b => b.Users)
+            .UsingEntity<FavoriteBooksUsers>(
+                j => j.HasOne(fub => fub.Book)
+                    .WithMany()
+                    .HasForeignKey(fub => fub.BookId),
+                j => j.HasOne(fub => fub.User)
+                    .WithMany()
+                    .HasForeignKey(fub => fub.UserId),
+                j => j.HasKey(fub => new { fub.UserId, fub.BookId }));
         
         builder.HasOne(u => u.Role)
             .WithMany(r => r.Users)

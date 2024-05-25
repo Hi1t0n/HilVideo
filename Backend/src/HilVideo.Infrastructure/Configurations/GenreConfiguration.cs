@@ -28,5 +28,15 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
                     .HasForeignKey(mg => mg.GenreId),
                 j => j.HasKey(mg => new { mg.GenreId, mg.MovieId })
             );
+
+        builder.HasMany(g => g.Books)
+            .WithMany(b => b.Genres)
+            .UsingEntity<BookGenre>(j => j.HasOne(bg => bg.Book)
+                    .WithMany()
+                    .HasForeignKey(bg => bg.BookId),
+                j => j.HasOne(bg => bg.Genre)
+                    .WithMany()
+                    .HasForeignKey(bg => bg.GenreId),
+                j => j.HasKey(bg => new { bg.GenreId, bg.BookId }));
     }
 }

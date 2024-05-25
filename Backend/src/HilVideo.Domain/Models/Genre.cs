@@ -6,4 +6,6 @@ public class Genre
     public string GenreName { get; set; } /* Название жанра */
     public List<Movie> Movies { get; set; } = new(); /* Связь с таблицей Movie многие ко многим */
     public List<MovieGenre> MovieGenres { get; set; } = new(); /* Связь с таблицей MovieGenre многие ко многим */
+    public List<Book> Books { get; set; } = new();
+    public List<BookGenre> BookGenres { get; set; } = new();
 }
