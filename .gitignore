@@ -2,9 +2,10 @@ Backend/src/HilVideo.Domain/bin/
 Backend/src/HilVideo.Domain/obj/
 Backend/src/HilVideo.Infrastructure/bin/
 Backend/src/HilVideo.Infrastructure/obj/
-Backend/src/UserSevice.Host/bin/
-Backend/src/UserSevice.Host/obj/
-Backend/src/UserSevice.Host/.idea/
+Backend/src/HilVideo.API/bin/
+Backend/src/HilVideo.API/obj/
+Backend/src/HilVideo.API/.idea/
+Backend/src/HilVideo.API/.vs/
 Diplom.drawio/
 frontend/node_modules/
 frontend/.idea/
