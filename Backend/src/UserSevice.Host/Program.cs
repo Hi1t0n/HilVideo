@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using UserService.Infrastructure.Extensions;
-using UserSevice.Host.Routing;
+using UserSevice.Host.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,12 +39,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 app.UseCors(allowCorsPolicy);
 
-app.AddUserRouter();
-app.AddAuthRouting();
-app.AddMovieRouting(); 
-app.AddGenreRouting();
-app.AddDirectorRouting();
-app.AddMovieTypeRouting();
+app.AddRouting();
 
 if (app.Environment.IsDevelopment())
 {

@@ -9,7 +9,7 @@ using UserService.Infrastructure.ErrorObjects;
 namespace UserService.Infrastructure.Repositories;
 
 /// <summary>
-///     Реализация интерфейса <see cref="IUserManager"/>
+///     Реализация интерфейса <see cref="IDirectorManager"/>
 /// </summary>
 public class DirectorManager : IDirectorManager
 {
