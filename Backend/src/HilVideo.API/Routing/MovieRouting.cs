@@ -16,7 +16,8 @@ public static class MovieRouting
 
         movieGroup.MapPost(pattern: "/", handler: AddMovie).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapPost(pattern: "/addmovietofavorites", handler: AddMovieToFavorites).RequireAuthorization();
-        movieGroup.MapGet(pattern: "/search", handler: GetSearchMovies);
+        movieGroup.MapGet(pattern: "/search/{movieName}", handler: GetSearchMovies);
+        movieGroup.MapGet(pattern: "/getfavoritemovies/{id:guid}", handler: GetFavoriteMoviesByUserIdAsync);
         movieGroup.MapGet(pattern: "/", handler: GetMoviesAsync);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
         movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
@@ -70,21 +71,35 @@ public static class MovieRouting
         return Results.Created();
     }
 
-    public static async Task<IResult> GetSearchMovies([FromQuery] string url, IMovieManager movieManager)
+    public static async Task<IResult> GetSearchMovies(string movieName, IMovieManager movieManager)
     {
-        if (MovieSearchRequest.TryParse(url, out MovieSearchRequest request))
+        var result = await movieManager.GetSearchMoviesAsync(movieName);
+        
+        if (result.IsFailure)
         {
-            var movies = await movieManager.GetSearchMoviesAsync(request);
-
-            return Results.Ok(movies.Value);
-        }
-        else
-        {
-            return Results.BadRequest(new
+            switch (result.Error)
             {
-                error = "Неверные параметры поиска"
-            });
+                case BadRequestError error:
+                    return Results.BadRequest(new
+                    {
+                        error = error.ErrorMessange
+                    });
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
         }
+
+        return Results.Ok(result.Value);
+    }
+
+    public static async Task<IResult> GetFavoriteMoviesByUserIdAsync(Guid id, IMovieManager movieManager)
+    {
+        var result = await movieManager.GetFavoriteMoviesByUserIdAsync(id);
+
+        return Results.Ok(result.Value);
     }
 
     public static async Task<IResult> GetMoviesAsync(IMovieManager movieManager)

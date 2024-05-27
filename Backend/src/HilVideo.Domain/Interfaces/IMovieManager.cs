@@ -8,7 +8,8 @@ namespace UserService.Domain.Interfaces;
 public interface IMovieManager
 {
     Task<Result<AddMovieRequest, IError>> AddMovieAsync(AddMovieRequest request );
-    Task<Result<List<GetMoviesResponse>>> GetSearchMoviesAsync(MovieSearchRequest request);
+    Task<Result<List<GetMoviesResponse>, IError>> GetSearchMoviesAsync(string movieName);
+    Task<Result<List<GetMoviesResponse>>> GetFavoriteMoviesByUserIdAsync(Guid userId);
     Task<Result<List<GetMoviesResponse>>> GetMoviesAsync();
     Task<Result<GetMovieByIdResponse, IError>> GetMovieByIdAsync(Guid id);
     Task<Result<Movie, IError>> DeleteMovieByIdAsync(Guid id);

@@ -42,7 +42,7 @@ public class UserManager : IUserManager
     /// </summary>
     /// <param name="id">Уникальный идентификатор</param>
     /// <returns>Результат получения пользователя с сообщением об ошибке или с данными пользователя</returns>
-    public async Task<Result<GetUserByIdResponse, IError>>? GetUserByIdAsync(Guid id)
+    public async Task<Result<GetUserByIdResponse, IError>> GetUserByIdAsync(Guid id)
     {
         var existingUser = await _context.Users.Join(_context.Roles,
             u => u.RoleId,
@@ -81,7 +81,7 @@ public class UserManager : IUserManager
     /// </summary>
     /// <param name="request">DTO с данными пользователя</param>
     /// <returns>Результат обновления пользователя</returns>
-    public async Task<Result<User,IError>>? UpdateUserByIdAsync(UpdateUserByIdRequest request)
+    public async Task<Result<User,IError>> UpdateUserByIdAsync(UpdateUserByIdRequest request)
     {
         if(string.IsNullOrWhiteSpace(request.login) || request.login.Length  > 30)
         {
@@ -115,7 +115,7 @@ public class UserManager : IUserManager
     /// </summary>
     /// <param name="id">Уникальный идентификатор пользователя</param>
     /// <returns>Результат удаления пользователя</returns>
-    public async Task<Result<User, IError>>? DeleteUserByIdAsync(Guid id)
+    public async Task<Result<User, IError>> DeleteUserByIdAsync(Guid id)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
         if (existingUser is null)

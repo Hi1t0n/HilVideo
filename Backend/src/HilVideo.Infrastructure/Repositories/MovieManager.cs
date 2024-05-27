@@ -1,10 +1,7 @@
 using CSharpFunctionalExtensions;
-using Infrastructure.Helpers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.Context;
-using UserService.Infrastructure.Enums;
 using UserService.Infrastructure.ErrorObjects;
 using UserService.Domain.Contracts;
 using UserService.Domain.DTO.MovieDTO;
@@ -125,35 +122,23 @@ public class MovieManager : IMovieManager
         }
     }
     
-    //TODO: Пагинация?
     /// <summary>
     /// Получение всех фильмов 
     /// </summary>
     /// <returns>Список фильмов (Для рендеринга карточек фильмов на клиенте)</returns>
-    public async Task<Result<List<GetMoviesResponse>>> GetSearchMoviesAsync(MovieSearchRequest request)
+    public async Task<Result<List<GetMoviesResponse>, IError>> GetSearchMoviesAsync(string movieName)
     {
-        var query = _context.Movies.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(request.MovieName))
+        if (string.IsNullOrWhiteSpace(movieName))
         {
-            query = query.Where(m => EF.Functions.Like(m.MovieName, $"%{request.MovieName}%"));
-        }
-
-        if (request.Genres is not null && request.Genres.Any())
-        {
-            query = query.Where(m => m.MovieGenres.Any(mg => request.Genres.Contains(mg.GenreId)));
+            return Result.Failure<List<GetMoviesResponse>, IError>(new BadRequestError("Введите название фильма"));
         }
         
-        query = _sorting.ApplySorting(query, request.SortBy);
-       
-
-        var movieList = await query
+        var movies = await _context.Movies
             .Include(m => m.MovieDirectors)
                 .ThenInclude(md => md.Director)
             .Include(m => m.MovieGenres)
                 .ThenInclude(mg => mg.Genre)
-            .Include(m => m.MovieType)
-                .ThenInclude(mt => mt.Movies)
+            .Where(x=> EF.Functions.Like(x.MovieName, $"%{movieName}%"))
             .Select(m => new GetMoviesResponse(
                 m.MovieId,
                 m.MovieName,
@@ -162,27 +147,28 @@ public class MovieManager : IMovieManager
                 m.MovieType.MovieTypeName,
                 m.ReleaseDate,
                 m.MovieDirectors
-                    .Select(md => $"{md.Director.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
+                    .Select(md => $"{md.Director!.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
                     .ToList(),
                 m.MovieGenres
-                    .Select(mg => mg.Genre.GenreName)
+                    .Select(mg => mg.Genre!.GenreName)
                     .ToList()
-            )).ToListAsync();
-        
+            )).AsNoTracking().ToListAsync();
 
-        return Result.Success(movieList);
+        if (!movies.Any())
+        {
+            return Result.Failure<List<GetMoviesResponse>, IError>(new NotFoundError($"Фильм с названием {movieName} не найден"));
+        }
+        
+        return Result.Success<List<GetMoviesResponse>, IError>(movies);
     }
 
-    public async Task<Result<List<GetMoviesResponse>>> GetMoviesAsync()
+    public async Task<Result<List<GetMoviesResponse>>> GetFavoriteMoviesByUserIdAsync(Guid userId)
     {
-        var movies = await _context.Movies
-            .Include(m => m.MovieDirectors)
-                .ThenInclude(md => md.Director)
-            .Include(m => m.MovieGenres)
-                .ThenInclude(mg => mg.Genre)
-            .Include(m => m.MovieType)
-                .ThenInclude(mt => mt.Movies)
-            .OrderByDescending(m=>m.ReleaseDate)
+        var movies = await _context.Movies.Include(x=> x.MovieDirectors)
+                .ThenInclude(x=> x.Director)
+            .Include(x=> x.MovieGenres)
+                .ThenInclude(x=> x.Genre)
+            .Where(x=> x.FavoriteMoviesUsers.Any(fmu=> fmu.UserId == userId))
             .Select(m => new GetMoviesResponse
             (
                 m.MovieId,
@@ -193,10 +179,36 @@ public class MovieManager : IMovieManager
                 m.ReleaseDate,
                 m.MovieDirectors
                     .Select(md =>
-                        $"{md.Director.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
+                        $"{md.Director!.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
+                    .ToList(),
+                m.MovieGenres.Select(mg => mg.Genre!.GenreName).ToList()
+            )).AsNoTracking().ToListAsync();
+        
+        return Result.Success(movies);
+    }
+
+    public async Task<Result<List<GetMoviesResponse>>> GetMoviesAsync()
+    {
+        var movies = await _context.Movies
+            .Include(m => m.MovieDirectors)
+                .ThenInclude(md => md.Director)
+            .Include(m => m.MovieGenres)
+                .ThenInclude(mg => mg.Genre)
+            .OrderByDescending(m=>m.ReleaseDate)
+            .Select(m => new GetMoviesResponse
+            (
+                m.MovieId,
+                m.MovieName,
+                m.MovieDescription,
+                m.PosterFilePath,
+                m.MovieType.MovieTypeName,
+                m.ReleaseDate,
+                m.MovieDirectors
+                    .Select(md => $"{md.Director!.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
                     .ToList(),
                 m.MovieGenres.Select(mg => mg.Genre!.GenreName).ToList()
             )).AsNoTracking().Take(_getMovie).ToListAsync();
+        
         return Result.Success(movies);
     }
 
@@ -214,8 +226,6 @@ public class MovieManager : IMovieManager
                 .ThenInclude(mg => mg.Genre)
             .Include(m => m.MovieFiles)
                 .ThenInclude(mf => mf.Movie)
-            .Include(m => m.MovieType)
-                .ThenInclude(mt => mt.Movies)
             .Where(x=> x.MovieId == id)
             .Select(m => new GetMovieByIdResponse
             (
@@ -227,10 +237,10 @@ public class MovieManager : IMovieManager
                 m.MovieType.MovieTypeName,
                 m.ReleaseDate,
                 m.MovieDirectors
-                    .Select(md => $"{md.Director.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
+                    .Select(md => $"{md.Director!.SecondName} {md.Director.FirstName} {md.Director.Patronymic}")
                     .ToList(),
-                m.MovieGenres.Select(mg => mg.Genre.GenreName).ToList()
-            )).FirstOrDefaultAsync();
+                m.MovieGenres.Select(mg => mg.Genre!.GenreName).ToList()
+            )).AsNoTracking().FirstOrDefaultAsync();
 
         if (movie is null)
         {

@@ -19,9 +19,16 @@ public interface IBookManager
     /// <summary>
     /// Поиск книги по параметра
     /// </summary>
-    /// <param name="request">Данные для поиска</param>
+    /// <param name="bookName">Данные для поиска</param>
     /// <returns>Данные книги</returns>
-    Task<Result<List<GetBooksResponse>>> GetSearchBookAsync(BookSearchRequest request);
+    Task<Result<List<GetBooksResponse>, IError>> GetSearchBookAsync(string bookName);
+    
+    /// <summary>
+    /// Получение всех избранных книг пользователь по id
+    /// </summary>
+    /// <param name="userId">Идентификатор пользователя</param>
+    /// <returns>Все избранные книги пользователя</returns>
+    Task<Result<List<GetBooksResponse>>> GetFavoriteBooksByUserIdAsync(Guid userId);
     
     /// <summary>
     /// Получение списка книг

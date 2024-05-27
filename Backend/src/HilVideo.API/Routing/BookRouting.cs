@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
 using Newtonsoft.Json;
 using UserService.Domain.DTO.BookDTO;
 using UserService.Domain.Interfaces;
@@ -15,7 +14,8 @@ public static class BookRouting
 
         bookGroup.MapPost(pattern: "/", handler: AddBookAsync);
         bookGroup.MapPost(pattern: "/addbooktofavorites", handler: AddBookToFavoritesAsync);
-        bookGroup.MapGet(pattern: "/search", handler: GetSearchBookAsync);
+        bookGroup.MapGet(pattern: "/search{bookName}", handler: GetSearchBookAsync);
+        bookGroup.MapGet(pattern: "/getfavoritebook/{id:guid}", handler: GetFavoriteBooksByUserIdAsync);
         bookGroup.MapGet(pattern: "/", handler: GetBooksAsync);
         bookGroup.MapGet(pattern: "/{id:guid}", handler: GetBookByIdAsync);
         bookGroup.MapPut(pattern: "/", handler: UpdateBookByIdAsync);
@@ -69,20 +69,35 @@ public static class BookRouting
         return Results.Created();
     }
 
-    public static async Task<IResult> GetSearchBookAsync([FromQuery] string url, IBookManager manager)
+    public static async Task<IResult> GetSearchBookAsync(string bookName, IBookManager manager)
     {
-        if (BookSearchRequest.TryParse(url, out BookSearchRequest request))
+        var result = await manager.GetSearchBookAsync(bookName);
+        
+        if (result.IsFailure)
         {
-            var result = await manager.GetSearchBookAsync(request);
-            return Results.Ok(result.Value);
-        }
-        else
-        {
-            return Results.BadRequest(new
+            switch (result.Error)
             {
-                error = "Неверные параметры поиска"
-            });
+                case BadRequestError error:
+                    return Results.BadRequest(new
+                    {
+                        error = error.ErrorMessange
+                    });
+                case NotFoundError error:
+                    return Results.NotFound(new
+                    {
+                        error = error.ErrorMessange
+                    });
+            }
         }
+
+        return Results.Ok(result.Value);
+    }
+
+    public static async Task<IResult> GetFavoriteBooksByUserIdAsync(Guid id, IBookManager manager)
+    {
+        var result = await manager.GetFavoriteBooksByUserIdAsync(id);
+
+        return Results.Ok(result.Value);
     }
 
     public static async Task<IResult> GetBooksAsync(IBookManager manager)

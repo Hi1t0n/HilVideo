@@ -108,23 +108,13 @@ public class BookManager : IBookManager
     }
     
     /// <inheritdoc />
-    public async Task<Result<List<GetBooksResponse>>> GetSearchBookAsync(BookSearchRequest request)
+    public async Task<Result<List<GetBooksResponse>, IError>> GetSearchBookAsync(string bookName)
     {
-        var query = _context.Books.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(request.BookName))
+        if (string.IsNullOrWhiteSpace(bookName))
         {
-            query = query.Where(x => EF.Functions.Like(x.BookName, $"%{request.BookName}%"));
+            return Result.Failure<List<GetBooksResponse>, IError>(new BadRequestError("Введите название книги"));
         }
-
-        if (request.Genres is not null && request.Genres.Any())
-        {
-            query = query.Where(x => x.BookGenres.Any(bg => request.Genres.Contains(bg.GenreId)));
-        }
-
-        query = _sorting.ApplySorting(query, request.SortBy);
-
-        var bookList = await query.Include(x => x.BookGenres)
+        var books = await _context.Books.Include(x => x.BookGenres)
                 .ThenInclude(x => x.Genre)
             .Include(x => x.BookAuthors)
                 .ThenInclude(x => x.Author)
@@ -136,14 +126,41 @@ public class BookManager : IBookManager
                 x.PosterFilePath,
                 x.ReleaseDate,
                 x.BookAuthors
-                    .Select(bookAuthor => $"{bookAuthor.Author.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}")
+                    .Select(bookAuthor => $"{bookAuthor.Author!.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}")
                     .ToList(),
                 x.BookGenres
                     .Select(bookGenre => bookGenre.Genre!.GenreName)
                     .ToList()
             )).AsNoTracking().ToListAsync();
+
+        if (!books.Any())
+        {
+            return Result.Failure<List<GetBooksResponse>, IError>(new NotFoundError($"Книга с названием {bookName} не найден"));
+        }
         
-        return Result.Success(bookList);
+        return Result.Success<List<GetBooksResponse>, IError>(books);
+    }
+    
+    ///<inheritdoc />
+    public async Task<Result<List<GetBooksResponse>>> GetFavoriteBooksByUserIdAsync(Guid userId)
+    {
+        var books = await _context.Books.Include(x => x.BookAuthors)
+                .ThenInclude(x => x.Author)
+            .Include(x => x.BookGenres)
+                .ThenInclude(x => x.Genre)
+            .Where(x=> x.FavoriteBooksUsers.Any(fbu=> fbu.UserId == userId))
+            .Select(x => new GetBooksResponse
+            (
+                x.BookId,
+                x.BookName,
+                x.BookDescription,
+                x.PosterFilePath,
+                x.ReleaseDate,
+                x.BookAuthors.Select(bookAuthor => $"{bookAuthor.Author!.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}").ToList(),
+                x.BookGenres.Select(bookGenre => bookGenre.Genre!.GenreName).ToList()
+            )).ToListAsync();
+
+        return Result.Success(books);
     }
 
     /// <inheritdoc />
@@ -163,7 +180,7 @@ public class BookManager : IBookManager
                 x.ReleaseDate,
                 x.BookAuthors
                     .Select(bookAuthor =>
-                        $"{bookAuthor.Author.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}")
+                        $"{bookAuthor.Author!.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}")
                     .ToList(),
                 x.BookGenres
                     .Select(bookGenre => bookGenre.Genre!.GenreName)
@@ -190,10 +207,10 @@ public class BookManager : IBookManager
                 x.PosterFilePath,
                 x.ReleaseDate,
                 x.BookAuthors
-                    .Select(x => $"{x.Author.SecondName} {x.Author.FirstName} {x.Author.Patronymic}")
+                    .Select(bookAuthor => $"{bookAuthor.Author!.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}")
                     .ToList(),
                 x.BookGenres
-                    .Select(x => x.Genre!.GenreName)
+                    .Select(bookGenre => bookGenre.Genre!.GenreName)
                     .ToList()
             )).AsNoTracking().FirstOrDefaultAsync();
 
