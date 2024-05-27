@@ -10,7 +10,8 @@ namespace Infrastructure.Helpers;
 public class FileHelper : IFileHelper
 {
     private const string VideoFilePath = @"..\..\..\data\Movies\"; /* Путь для сохранения фильмов */
-    private const string ImageFilePath = @"..\..\..\data\Posters\"; /* Путь для сохранения фильмов */
+    private const string ImageFilePath = @"..\..\..\data\Posters\"; /* Путь для сохранения картинок */
+    private const string BookFilePath = @"..\..\..\data\Books"; /* Путь для сохранения книг */
     private const string MainFilePath = @"C:\Diplom\";
     private IWordsTranslate _wordsTranslate;
     public FileHelper(IWordsTranslate wordsTranslate)
@@ -63,6 +64,24 @@ public class FileHelper : IFileHelper
             await file.CopyToAsync(stream);
         }
 
+        return Result.Success(Path.GetRelativePath(@"C:\Diplom\",filePath));
+    }
+
+    public async Task<Result<string>> LoadBookFileAsync(IFormFile? file, string bookName)
+    {
+        if (file is null || file.Length == 0)
+        {
+            return Result.Failure<string>("File not load");
+        }
+
+        string filePath = Path.Combine(BookFilePath,
+            $"{_wordsTranslate.WordTranslate(bookName)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.pdf");
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+        
         return Result.Success(Path.GetRelativePath(@"C:\Diplom\",filePath));
     }
 

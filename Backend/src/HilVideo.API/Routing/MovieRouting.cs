@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using UserService.Domain.Contracts;
+using UserService.Domain.DTO.MovieDTO;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.ErrorObjects;
 using IResult = Microsoft.AspNetCore.Http.IResult;
@@ -19,7 +20,7 @@ public static class MovieRouting
         movieGroup.MapGet(pattern: "/", handler: GetMoviesAsync);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
         movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
-        movieGroup.MapDelete(pattern: "/", handler: DeleteMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        movieGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/deletemoviefromfavorites", handler: DeleteMovieFromFavorites).RequireAuthorization();
         
         return application;

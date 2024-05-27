@@ -41,6 +41,7 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IDirectorManager, DirectorManager>();
         serviceCollection.AddScoped<IMovieTypeManager, MovieTypeManager>();
         serviceCollection.AddScoped<IAuthorManager, AuthorManager>();
+        serviceCollection.AddScoped<IBookManager, BookManager>();
         
         return serviceCollection;
     }

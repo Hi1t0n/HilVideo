@@ -7,6 +7,7 @@ using UserService.Infrastructure.Context;
 using UserService.Infrastructure.Enums;
 using UserService.Infrastructure.ErrorObjects;
 using UserService.Domain.Contracts;
+using UserService.Domain.DTO.MovieDTO;
 using UserService.Domain.Models;
 
 namespace UserService.Infrastructure.Repositories;
@@ -233,7 +234,7 @@ public class MovieManager : IMovieManager
 
         if (movie is null)
         {
-            return Result.Failure<GetMovieByIdResponse, IError>(new NotFoundError("Фильм не найден!"));
+            return Result.Failure<GetMovieByIdResponse, IError>(new NotFoundError($"Фильм c Id: {id} не найден!"));
         }
         
         return Result.Success<GetMovieByIdResponse, IError>(movie);
@@ -246,7 +247,7 @@ public class MovieManager : IMovieManager
             .FirstOrDefaultAsync(x => x.MovieId == id);
         if (movie is null)
         {
-            return Result.Failure<Movie, IError>(new NotFoundError("Фильм не найлен"));
+            return Result.Failure<Movie, IError>(new NotFoundError($"Фильм с Id: {id} не найлен"));
         }
 
         var movieFiles = movie.MovieFiles.Select(x => x.FilePath).ToList();
@@ -269,7 +270,7 @@ public class MovieManager : IMovieManager
 
         if (movie is null)
         {
-            return Result.Failure<Movie, IError>(new NotFoundError("Обновляемый фильм не найден"));
+            return Result.Failure<Movie, IError>(new NotFoundError($"Фильм с Id: {request.MovieId} не найден"));
         }
 
         movie.MovieName = request.MovieName;
@@ -290,7 +291,7 @@ public class MovieManager : IMovieManager
             {
                 MovieId = request.MovieId,
                 GenreId = g
-            }).ToList());
+            }));
         }
         
         // Удаление режиссеров
@@ -306,9 +307,10 @@ public class MovieManager : IMovieManager
             {
                 MovieId = request.MovieId,
                 DirectorId = d
-            }).ToList());
+            }));
         }
 
+        _context.Update(movie);
         await _context.SaveChangesAsync();
 
 
@@ -318,15 +320,17 @@ public class MovieManager : IMovieManager
     /// <summary>
     /// Добавление фильма в избранные пользователем
     /// </summary>
-    /// <param name="data">Данные для добавления</param>
+    /// <param name="request">Данные для добавления</param>
     /// <returns>Результат операции</returns>
-    public async Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteRequest data)
+    public async Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteRequest request)
     {
         await _context.FavoriteMoviesUsers.AddAsync(new FavoriteMoviesUsers()
         {
-            UserId = data.userId,
-            MovieId = data.movieId
+            UserId = request.userId,
+            MovieId = request.movieId
         });
+
+        await _context.SaveChangesAsync();
 
         return Result.Success();
     }
@@ -334,12 +338,12 @@ public class MovieManager : IMovieManager
     /// <summary>
     /// Удаление фильма из избранных у пользователя
     /// </summary>
-    /// <param name="data">Данные для добавления</param>
+    /// <param name="request">Данные для добавления</param>
     /// <returns>Результат операции</returns>
-    public async Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieFromFavoritesAsync(MovieToFavoriteRequest data)
+    public async Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieFromFavoritesAsync(MovieToFavoriteRequest request)
     {
         var existData = await _context.FavoriteMoviesUsers
-            .Where(fum => fum.UserId == data.userId && fum.MovieId == data.movieId).FirstOrDefaultAsync();
+            .Where(fum => fum.UserId == request.userId && fum.MovieId == request.movieId).FirstOrDefaultAsync();
         if (existData is null)
         {
             return Result.Failure<FavoriteMoviesUsers, IError>(new NotFoundError("Запись не найдена"));

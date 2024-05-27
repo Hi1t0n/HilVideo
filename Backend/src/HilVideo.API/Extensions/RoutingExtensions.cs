@@ -13,6 +13,7 @@ public static class RoutingExtensions
         application.AddDirectorRouting();
         application.AddMovieTypeRouting();
         application.AddAuthorRouting();
+        application.AddBookRouting();
         
         return application;
     }

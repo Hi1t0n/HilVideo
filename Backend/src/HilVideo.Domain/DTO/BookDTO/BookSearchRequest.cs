@@ -1,10 +1,10 @@
 using System.Web;
 
-namespace UserService.Domain.Contracts;
+namespace UserService.Domain.DTO.BookDTO;
 
-public record MovieSearchRequest(string MovieName, List<Guid>? Genres, int SortBy)
+public record BookSearchRequest(string? BookName, List<Guid>? Genres, int? SortBy)
 {
-    public static bool TryParse(string url, out MovieSearchRequest? result)
+    public static bool TryParse(string url, out BookSearchRequest? result)
     {
         result = null;
         if (string.IsNullOrEmpty(url))
@@ -18,7 +18,7 @@ public record MovieSearchRequest(string MovieName, List<Guid>? Genres, int SortB
             var paramsCollections = HttpUtility.ParseQueryString(parsedUrl.Length > 1 ? parsedUrl[1] : "");
 
             // Извлекаем значения параметров из строки 
-            var movieName = paramsCollections["MovieName"];
+            var bookName = paramsCollections["BookName"];
             var genres = paramsCollections["Genres"]?.Split(',')
                 .Where(x => !string.IsNullOrEmpty(x) && !string.IsNullOrWhiteSpace(x)).Select(Guid.Parse).ToList();
             var sortBy = paramsCollections["SortBy"];
@@ -26,7 +26,7 @@ public record MovieSearchRequest(string MovieName, List<Guid>? Genres, int SortB
             int? sortByInt = !string.IsNullOrEmpty(sortBy) ? Convert.ToInt32(sortBy) : null;
         
             // Создаем объект
-            result = new MovieSearchRequest(movieName, genres, sortByInt ?? default);
+            result = new BookSearchRequest(bookName, genres, sortByInt ?? default);
             return true;
         }
         catch(Exception e)
