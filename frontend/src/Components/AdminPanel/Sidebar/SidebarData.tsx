@@ -3,6 +3,7 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 export const SidebarData = [
     {
@@ -30,4 +31,9 @@ export const SidebarData = [
         icon: <GroupRemoveIcon/>,
         link: 'admin/remove',
     },
+    {
+        title: 'Назад',
+        icon: <ExitToAppIcon/>,
+        link: '/',
+    }
 ]

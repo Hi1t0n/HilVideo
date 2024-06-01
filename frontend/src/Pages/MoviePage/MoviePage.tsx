@@ -4,6 +4,7 @@ import {apiUrl, url} from "../../utils/constants";
 import axios, {AxiosError} from "axios";
 import {Movie} from "../../types/MovieData";
 import ReactPlayer from "react-player/file";
+import './MoviePage.css'
 
 function MoviePage(){
     const [movieData, setMovieData] = useState<Movie | null>(null);

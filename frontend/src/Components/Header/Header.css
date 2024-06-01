@@ -6,6 +6,7 @@
 .logo{
     height: 50px;
     width: 100px;
+    cursor: pointer;
 }
 
 .navigationMenu{
@@ -15,4 +16,8 @@
 
 .navigationButton{
     margin-left: auto;
+}
+
+.profile{
+    cursor: pointer;
 }

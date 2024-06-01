@@ -6,15 +6,11 @@ import '../MainPage/MainPage.css'
 function MainPage(){
     return(
         <div className="MainPage-wrapper">
-            <div>
-                <Header></Header>
+            <Header />
+            <div className="MainPage-content">
+                <Outlet />
             </div>
-            <div>
-                <Outlet/>
-            </div>
-            <div>
-                <Footer></Footer>
-            </div>
+            <Footer />
         </div>
     );
 }

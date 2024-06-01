@@ -1,3 +1,11 @@
-.MainPage-wrapper{
-    overflow-x: hidden
+
+.MainPage-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.MainPage-content {
+    flex-grow: 1;
 }

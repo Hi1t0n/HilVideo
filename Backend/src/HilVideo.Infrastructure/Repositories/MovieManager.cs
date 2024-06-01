@@ -132,6 +132,8 @@ public class MovieManager : IMovieManager
         {
             return Result.Failure<List<GetMoviesResponse>, IError>(new BadRequestError("Введите название фильма"));
         }
+
+        movieName = char.ToUpper(movieName[0]) + movieName[1..];
         
         var movies = await _context.Movies
             .Include(m => m.MovieDirectors)

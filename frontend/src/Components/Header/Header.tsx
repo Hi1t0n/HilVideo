@@ -6,9 +6,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState, setLoginState} from "../../store/LoginSlice";
 import axios, {AxiosError} from "axios";
 import {Avatar, Stack} from "@mui/material";
+import Alert from '@mui/material/Alert';
 import {UserDataState} from "../../store/UserDataSlice";
 import color from "../../function/randomColor";
 import {persistor} from "../../store/store";
+import SearchBar from "../SearchBar/SearchBar";
+import React, {useState} from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {apiUrl} from "../../utils/constants";
+import moviePage from "../../Pages/MoviePage/MoviePage";
+
+type TypeMsg = 'error' | 'warning' | 'info' | 'success';
 
 function Header(){
     const navigate = useNavigate();
@@ -16,16 +25,60 @@ function Header(){
     const isLogin = useSelector((state: RootState)=>state.login.isLogin);
     // @ts-ignore
     const userData = useSelector((state: UserDataState)=> state.userData);
+    const [searchText, setSearchText] = useState<string>("");
+
+    const onChangeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value);
+    }
+
+    const onClickSearch = async () => {
+        if(searchText.length === 0)
+        {
+            notify('Введите параметры поиска', 'error');
+            return;
+        }
+
+        navigate(`/movie/search/${searchText}`,{replace: false});
+    }
+
+    const onClickLogo = () => {
+        navigate(('/'), {replace: false});
+    }
+
+    const notify = (msg: string, typeMsg: TypeMsg) => {
+        if(typeMsg === 'error'){
+            toast.error(msg);
+            return
+        }
+        if(typeMsg === 'warning'){
+            toast.warning(msg);
+            return;
+        }
+        if(typeMsg === 'info'){
+            toast.info(msg);
+            return;
+        }
+        if(typeMsg === 'success'){
+            toast.success(msg);
+            return;
+        }
+    };
 
     return(
         <header className={"header"}>
             <nav className={"navigationMenu"}>
-                <img src={logo} className={"logo"} alt={"Company logo"}/>
+                <div>
+                    <img src={logo} className={"logo"} alt={"Company logo"} onClick={onClickLogo} />
+                </div>
+                <div>
+                    <SearchBar onChange={onChangeSearchText} onClick={onClickSearch} value={searchText}/>
+                    <ToastContainer/>
+                </div>
                 <div className={"navigationButton"}>
-                    {isLogin ? (
+                {isLogin ? (
                         <>
                             <Stack direction={"row"}>
-                                <Avatar style={{backgroundColor: color}} onClick={()=> navigate('profile', {replace: false})}>{userData.login.toUpperCase().slice(0,2)}</Avatar>
+                                <Avatar className={"profile"} style={{backgroundColor: color}} onClick={()=> navigate('profile', {replace: false})}>{userData.login.toUpperCase().slice(0,2)}</Avatar>
                             </Stack>
                         </>
                     ) : (

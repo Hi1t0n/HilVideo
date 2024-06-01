@@ -1,15 +1,10 @@
 .react-player {
     position: relative;
-    padding-top: 56.25%;
+    padding-top: 50px;
 }
 
-.react-player > div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    max-width: 100vw;
-    max-height: 100vh;
-    object-fit: contain;
+.poster{
+    width: 280px;
+    height: 400px;
 }
+

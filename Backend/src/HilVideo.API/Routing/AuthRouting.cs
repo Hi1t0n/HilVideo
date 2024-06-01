@@ -68,11 +68,18 @@ public static class AuthRouting
             }
         }
         
-        httpContext.Response.Cookies.Append("token",result.Value);
+        httpContext.Response.Cookies.Append("token",result.Value.Token);
 
-        var user = await userManager.GetUserByLoginAsync(request.Login);
+        var user = new UserData(
+            result.Value.Id,
+            result.Value.Login,
+            result.Value.Role,
+            result.Value.PhoneNumber,
+            result.Value.Email,
+            result.Value.CreateDate
+            );
         
-        return Results.Ok(user.Value);
+        return Results.Ok(user);
     }
     
     //TODO: async

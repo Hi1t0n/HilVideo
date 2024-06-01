@@ -6,6 +6,7 @@ using UserService.Infrastructure.ErrorObjects;
 using AuthService.Domain.Interfaces;
 using AuthService.Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
+using UserService.Domain.DTO.AuthDTO;
 
 namespace UserService.Infrastructure.Repositories;
 
@@ -83,16 +84,16 @@ public class AuthManager : IAuthManager
     /// </summary>
     /// <param name="request">DTO с данными пользователя для входа</param>
     /// <returns>Результат входа с сообщением об ошибке</returns>
-    public async Task<Result<string,IError>> Login(LoginUserRequest request)
+    public async Task<Result<LoginDataResponse,IError>> Login(LoginUserRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Password))
         {
-            return Result.Failure<string, IError>(new BadRequestError("Пожалуйтса введите данные"));
+            return Result.Failure<LoginDataResponse, IError>(new BadRequestError("Пожалуйтса введите данные"));
         }
 
         if (string.IsNullOrWhiteSpace(request.Login))
         {
-            return Result.Failure<string, IError>(new BadRequestError("Пожалуйтса введите данные"));
+            return Result.Failure<LoginDataResponse, IError>(new BadRequestError("Пожалуйтса введите данные"));
         }
         
         var user = await _context.Users
@@ -105,14 +106,14 @@ public class AuthManager : IAuthManager
 
         if (user is null)
         {
-            return Result.Failure<string,IError>(new BadRequestError("Неверный логин или пароль"));
+            return Result.Failure<LoginDataResponse,IError>(new BadRequestError("Неверный логин или пароль"));
         }
 
         var result = _passwordHasher.Verify(request.Password, user.User.Password);
 
         if (result is false)
         {
-            return Result.Failure<string, IError>(new BadRequestError("Неверный логин или пароль"));
+            return Result.Failure<LoginDataResponse, IError>(new BadRequestError("Неверный логин или пароль"));
         }
 
         var userData = new UserData(
@@ -126,8 +127,17 @@ public class AuthManager : IAuthManager
         
         var token = _jwtProvider.GenerateToken(userData);
         
+        var userReponseData = new LoginDataResponse(
+            userData.UserId,
+            userData.Login,
+            userData.RoleName,
+            userData.Email,
+            userData.PhoneNumber,
+            userData.CreatedDate,
+            token
+        );
         
-        return Result.Success<string,IError>(token);
+        return Result.Success<LoginDataResponse,IError>(userReponseData);
     }
 
     

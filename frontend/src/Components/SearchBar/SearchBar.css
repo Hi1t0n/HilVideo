@@ -1,0 +1,34 @@
+.SearchBar-wrapper{
+    position: relative;
+    border-radius: 20px;
+    margin: 5px 5px 5px 5px;
+    max-height: 48px;
+    max-width: 300px;
+    min-height: 20px;
+    min-width: 100px;
+    height: 48px;
+    width: 300px;
+    background-color: #c2bebe;
+}
+
+.search-input{
+    position: absolute;
+    max-height: 20px;
+    max-width: 300px;
+    min-height: 20px;
+    min-width: 100px;
+    height: 20px;
+    width: 260px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    margin: 12px 5px 5px 5px;
+    font-size: 18px;
+}
+
+.Icon{
+    position: absolute;
+    margin: 10px 5px 5px 5px;
+    left: 260px;
+    cursor: pointer;
+}

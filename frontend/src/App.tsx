@@ -10,6 +10,7 @@ import AdminPanel from "./Pages/AdminPanel/AdminPanel";
 import AddMoviePage from "./Pages/AdminPages/AddMoviePage";
 import MoviePage from "./Pages/MoviePage/MoviePage";
 import MainMoviesPage from "./Pages/mainMoviesPage/MainMoviesPage";
+import NotFoundPage from "./Pages/ErrorPages/NotFoundPage/NotFoundPage";
 
 
 function App() {
@@ -25,7 +26,9 @@ function App() {
                     }/>
                     <Route path={"/"} element={<MainMoviesPage/>}/>
                     <Route path={"/movie/:id"} element={<MoviePage/>}/>
-
+                    <Route path={"/movie/search/:movieName"} element={<MainMoviesPage/>}/>
+                    <Route path={"/book/:id"} element={<div></div>}/>
+                    <Route path={"/not-found"} element={<NotFoundPage/>}/>
                 </Route>
                 <Route path={"/login"} element={<LoginForm/>}/>
                 <Route path={"/registration"} element={<RegistrationForm/>}/>

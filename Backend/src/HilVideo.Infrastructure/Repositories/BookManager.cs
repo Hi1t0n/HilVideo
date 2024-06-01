@@ -114,10 +114,14 @@ public class BookManager : IBookManager
         {
             return Result.Failure<List<GetBooksResponse>, IError>(new BadRequestError("Введите название книги"));
         }
+        
+        bookName = char.ToUpper(bookName[0]) + bookName[1..];
+        
         var books = await _context.Books.Include(x => x.BookGenres)
                 .ThenInclude(x => x.Genre)
             .Include(x => x.BookAuthors)
                 .ThenInclude(x => x.Author)
+            .Where(x=> EF.Functions.Like(x.BookName, $"%{bookName}%"))
             .Select(x => new GetBooksResponse
             (
                 x.BookId,

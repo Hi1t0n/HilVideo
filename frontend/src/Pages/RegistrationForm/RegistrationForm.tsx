@@ -75,7 +75,7 @@ function RegistrationForm(){
           return;
       }
         /* Проверка электронной почты */
-      if(!EMAIL_REGEX.test(email)){
+  if(!EMAIL_REGEX.test(email)){
           handleErrorMessage("введен не верный email");
           return;
       }
@@ -138,7 +138,7 @@ function RegistrationForm(){
                                required={true} minLength={11} maxLength={11} onChange={handlePhoneNumberChange}
                                pattern={PHONENUMBER_REGEX.toString()}/>
                 </div>
-                <div>
+                <div>   
                     <p className={"errorMessage"}>{errorMessage}</p>
                 </div>
                 <div>
