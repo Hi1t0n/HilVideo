@@ -4,6 +4,7 @@ import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 
 export const SidebarData = [
     {
@@ -15,6 +16,11 @@ export const SidebarData = [
         title: 'Добавить фильм',
         icon: <VideoCallIcon/>,
         link: 'movie/add',
+    },
+    {
+        title: 'Добавить книгу',
+        icon: <BookmarkAddIcon/>,
+        link: 'book/add',
     },
     {
         title: 'Удалить фильм',

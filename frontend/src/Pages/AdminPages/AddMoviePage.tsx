@@ -7,6 +7,7 @@ import './AddMoviePage.css';
 import {useGetMovieTypeQuery} from "../../store/Api/movieTypeApi";
 import SelectSingle from "../../Components/Select/SelectSingle";
 import axios, {AxiosError} from "axios";
+import {toast, ToastContainer} from "react-toastify";
 
 function AddMoviePage(){
     const [selectedMovieFile , setSelectedMovieFile] = useState<File | null>(null);
@@ -44,38 +45,37 @@ function AddMoviePage(){
 
     const handleUpload = async () => {
         if(!movieName) {
-            alert("Пожалуйста введите название фильма");
+            toast.error("Пожалуйста введите название фильма");
             return;
         }
 
         if(!description){
-            alert("Пожалуйста введите описание");
+            toast.error("Пожалуйста введите описание");
             return;
         }
 
         if(!selectedPosterFile){
-            alert("Пожалуйста выберите постер");
+            toast.error("Пожалуйста выберите постер");
             return;
         }
 
         if(!selectedMovieFile){
-            alert("Пожалуйста выберите фильм");
+            toast.error("Пожалуйста выберите фильм");
             return;
         }
 
-
         if(selectedGenres.length === 0){
-            alert("пожалуйста выберите жанры");
+            toast.error("Пожалуйста выберите жанры");
             return;
         }
 
         if(selectedDirectors.length === 0){
-            alert("пожалуйста выберите режисееров");
+            toast.error("Пожалуйста выберите режисееров");
             return;
         }
 
         if(selectedMovieType === ""){
-            alert("пожалуйста выберите тип");
+            toast.error("Пожалуйста выберите тип");
             return;
         }
 
@@ -90,26 +90,25 @@ function AddMoviePage(){
         formData.append('Genres', JSON.stringify(selectedGenres));
 
 
-        try {
-            const response = axios.post('https://localhost:7099/api/movie/',formData, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-
-                }
-            })
-
-
-        }catch (error){
-            const axiosError = error as AxiosError;
-            if(axiosError.response){
-                // @ts-ignore
-                const errorMessage: string = axiosError.response.data.error;
-                alert(errorMessage);
-                return;
+        axios.post('https://localhost:7099/api/movie/',formData, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'multipart/form-data'
             }
-        }
-
+        }).then(response=> {
+            if (response.status === 201) {
+                toast.success("Фильм успешно добавлен");
+            }
+        }).catch(error => {
+            const axiosError = error as AxiosError;
+            // @ts-ignore
+            if (axiosError.response?.data?.error) {
+                // @ts-ignore
+                toast.error(axiosError.response.data.error);
+            } else {
+                toast.error("Произошла ошибка при добавлении фильма");
+            }
+        });
     }
 
 
@@ -147,6 +146,7 @@ function AddMoviePage(){
 
     return(
             <div className={"wrapper"}>
+                <ToastContainer/>
                 <div className={"content"}>
                     <h1 className={"form-name"}>Добавление фильма</h1>
                     <div>
@@ -170,16 +170,20 @@ function AddMoviePage(){
                     <div>
                         <input className={'data-input'} type={'date'} onChange={handleChangeReleaseDate} required/>
                     </div>
-                    <div>
-                        <SelectCheckBox data={genresData} handleChange={handleChangeGenresData} multiple={true}
-                                        placeholder={"Жанры"} selectedData={selectedGenres} required={true}/>
-                    </div>
-                    <div>
-                        <SelectCheckBox data={directorsData} handleChange={handleChangeDirectorsData} multiple={true}
-                                        placeholder={"Режиссеры"} selectedData={selectedDirectors} required={true}/>
-                    </div>
-                    <div>
-                        <SelectSingle data={movieTypeData} handleChange={handleChangeMovieType} multiple={false} placeholder={"Тип"} selectValue={selectedMovieType}/>
+                    <div className={'add-movie-select'}>
+                        <div>
+                            <SelectCheckBox data={genresData} handleChange={handleChangeGenresData} multiple={true}
+                                            placeholder={"Жанры"} selectedData={selectedGenres} required={true}/>
+                        </div>
+                        <div>
+                            <SelectCheckBox data={directorsData} handleChange={handleChangeDirectorsData}
+                                            multiple={true}
+                                            placeholder={"Режиссеры"} selectedData={selectedDirectors} required={true}/>
+                        </div>
+                        <div>
+                            <SelectSingle data={movieTypeData} handleChange={handleChangeMovieType} multiple={false}
+                                          placeholder={"Тип"} selectValue={selectedMovieType}/>
+                        </div>
                     </div>
                     <button onClick={handleUpload} className={"add-movie-button"}>{"Добавить фильм"}</button>
                 </div>

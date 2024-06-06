@@ -1,6 +1,6 @@
 import logo from "../../logo.svg"
 import "./Header.css"
-import {useNavigate} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavigationButton from "../NavigationButton/NavigationButton";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, setLoginState} from "../../store/LoginSlice";
@@ -21,6 +21,7 @@ type TypeMsg = 'error' | 'warning' | 'info' | 'success';
 
 function Header(){
     const navigate = useNavigate();
+    const location = useLocation();
     // @ts-ignore
     const isLogin = useSelector((state: RootState)=>state.login.isLogin);
     // @ts-ignore
@@ -32,14 +33,17 @@ function Header(){
     }
 
     const onClickSearch = async () => {
-        if(searchText.length === 0)
-        {
+        if (searchText.length === 0) {
             notify('Введите параметры поиска', 'error');
             return;
         }
 
-        navigate(`/movie/search/${searchText}`,{replace: false});
-    }
+        if (location.pathname.startsWith('/book')) {
+            navigate(`/book/search/${searchText}`, { replace: false });
+        } else {
+            navigate(`/movie/search/${searchText}`, { replace: false });
+        }
+    };
 
     const onClickLogo = () => {
         navigate(('/'), {replace: false});
@@ -75,11 +79,11 @@ function Header(){
                     <ToastContainer/>
                 </div>
                 <div className={"navigationButton"}>
+                    <NavigationButton children={"Книги"} onClick={()=> navigate('/book', {replace: false})} />
+                    <NavigationButton children={"Фильмы"} onClick={()=> navigate('/', {replace: false})} />
                 {isLogin ? (
                         <>
-                            <Stack direction={"row"}>
                                 <Avatar className={"profile"} style={{backgroundColor: color}} onClick={()=> navigate('profile', {replace: false})}>{userData.login.toUpperCase().slice(0,2)}</Avatar>
-                            </Stack>
                         </>
                     ) : (
                         <>

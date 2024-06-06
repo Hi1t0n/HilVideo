@@ -4,6 +4,7 @@
     color: #969600;
     font-size: 18px;
     transition: 1s linear;
+    margin: 0 0 0 10px;
 }
 
 .navigationButton:hover{

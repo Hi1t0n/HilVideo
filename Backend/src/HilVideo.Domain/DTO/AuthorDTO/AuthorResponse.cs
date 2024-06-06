@@ -1,3 +1,3 @@
 namespace UserService.Domain.DTO.AuthorDTO;
 
-public record AuthorResponse(Guid Id, string FullName);
+public record AuthorResponse(Guid Id, string Name);

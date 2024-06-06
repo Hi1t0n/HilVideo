@@ -16,6 +16,7 @@ import userDataReducer from "./UserDataSlice";
 import {directorsApi} from "./Api/directorsApi";
 import {movieTypeApi} from "./Api/movieTypeApi";
 import {setupListeners} from "@reduxjs/toolkit/query";
+import {authorsApi} from "./Api/authorApi";
 
 const rootReducer = combineReducers({
     login: loginReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
     [genresApi.reducerPath]: genresApi.reducer,
     [directorsApi.reducerPath]: directorsApi.reducer,
     [movieTypeApi.reducerPath]: movieTypeApi.reducer,
+    [authorsApi.reducerPath]: authorsApi.reducer,
 })
 
 const persistConfig = {
@@ -39,7 +41,7 @@ const store = configureStore({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        }).concat(genresApi.middleware, directorsApi.middleware, movieTypeApi.middleware),
+        }).concat(genresApi.middleware, directorsApi.middleware, movieTypeApi.middleware, authorsApi.middleware),
 })
 
 setupListeners(store.dispatch);

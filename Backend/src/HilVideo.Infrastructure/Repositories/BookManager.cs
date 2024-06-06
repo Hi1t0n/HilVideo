@@ -128,6 +128,7 @@ public class BookManager : IBookManager
                 x.BookName,
                 x.BookDescription,
                 x.PosterFilePath,
+                x.BookFilePath,
                 x.ReleaseDate,
                 x.BookAuthors
                     .Select(bookAuthor => $"{bookAuthor.Author!.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}")
@@ -139,7 +140,7 @@ public class BookManager : IBookManager
 
         if (!books.Any())
         {
-            return Result.Failure<List<GetBooksResponse>, IError>(new NotFoundError($"Книга с названием {bookName} не найден"));
+            return Result.Failure<List<GetBooksResponse>, IError>(new NotFoundError($"Книга с названием {bookName} не найдена"));
         }
         
         return Result.Success<List<GetBooksResponse>, IError>(books);
@@ -159,6 +160,7 @@ public class BookManager : IBookManager
                 x.BookName,
                 x.BookDescription,
                 x.PosterFilePath,
+                x.BookFilePath,
                 x.ReleaseDate,
                 x.BookAuthors.Select(bookAuthor => $"{bookAuthor.Author!.SecondName} {bookAuthor.Author.FirstName} {bookAuthor.Author.Patronymic}").ToList(),
                 x.BookGenres.Select(bookGenre => bookGenre.Genre!.GenreName).ToList()
@@ -181,6 +183,7 @@ public class BookManager : IBookManager
                 x.BookName,
                 x.BookDescription,
                 x.PosterFilePath,
+                x.BookFilePath,
                 x.ReleaseDate,
                 x.BookAuthors
                     .Select(bookAuthor =>

@@ -35,14 +35,14 @@ public static class AuthorRouting
             }
         }
 
-        return Results.Ok();
+        return Results.Ok(result.Value);
     }
 
     public static async Task<IResult> GetAllAuthorAsync(IAuthorManager manager)
     {
         var result = await manager.GetAllAuthorAsync();
 
-        return Results.Ok();
+        return Results.Ok(result.Value);
     }
 
     public static async Task<IResult> UpdateAuthorByIdAsync(UpdateAuthorRequest request, IAuthorManager manager)

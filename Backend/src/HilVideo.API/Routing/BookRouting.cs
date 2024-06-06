@@ -14,7 +14,7 @@ public static class BookRouting
 
         bookGroup.MapPost(pattern: "/", handler: AddBookAsync);
         bookGroup.MapPost(pattern: "/addbooktofavorites", handler: AddBookToFavoritesAsync);
-        bookGroup.MapGet(pattern: "/search{bookName}", handler: GetSearchBookAsync);
+        bookGroup.MapGet(pattern: "/search/{bookName}", handler: GetSearchBookAsync);
         bookGroup.MapGet(pattern: "/getfavoritebook/{id:guid}", handler: GetFavoriteBooksByUserIdAsync);
         bookGroup.MapGet(pattern: "/", handler: GetBooksAsync);
         bookGroup.MapGet(pattern: "/{id:guid}", handler: GetBookByIdAsync);

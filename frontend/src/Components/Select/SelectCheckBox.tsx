@@ -9,9 +9,10 @@ import Checkbox from '@mui/material/Checkbox';
 import {Director} from "../../types/DirectorsTypes";
 import {Genre} from "../../types/GenresTypes";
 import {MovieType} from "../../types/MovieTypeTypes";
+import {Author} from "../../types/AuthorsTypes";
 
 interface Props {
-    data: Genre[] | Director[] | MovieType[];
+    data: Genre[] | Director[] | MovieType[] | Author[];
     handleChange: (event: SelectChangeEvent<string[]>) => void;
     multiple: boolean;
     required: boolean;
@@ -33,7 +34,7 @@ const SelectCheckBox: React.FC<Props> = ({ data, handleChange, multiple, require
                     onChange={handleChange}
                     input={<OutlinedInput label={placeholder} />}
                 >
-                    {data.map((item : Genre | Director, index) => (
+                    {data && data.map((item : Genre | Director | Author, index) => (
                         <MenuItem key={item.id} value={item.id}>
                             <Checkbox checked={selectedData.includes(item.id)} />
                             <ListItemText primary={item.name} />

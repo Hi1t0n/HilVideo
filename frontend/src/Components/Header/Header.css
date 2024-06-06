@@ -1,23 +1,28 @@
-.header{
+.header {
     background-color: #282c34;
     align-items: center;
 }
 
-.logo{
+.logo {
     height: 50px;
     width: 100px;
     cursor: pointer;
 }
 
-.navigationMenu{
+.navigationMenu {
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Распределение пространства между логотипом и остальными элементами */
+    width: 100%; /* Занимает всю ширину контейнера */
 }
 
-.navigationButton{
-    margin-left: auto;
+.navigationButton {
+    display: flex;
+    align-items: center; /* Центровка элементов по вертикали */
+    margin-left: auto; /* Прижимает элементы к правому краю */
 }
 
-.profile{
+.profile {
     cursor: pointer;
+    margin-left: 10px;
 }

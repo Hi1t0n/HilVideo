@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-.MovieCard-wrapper {
+.BookCard-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,29 +12,27 @@
     cursor: pointer;
     transition: all 0.3s ease;
     margin: 10px 10px 10px 10px;
-    color: #cccccc;
     background-color: #16161d;
+    color: #cccccc;
 }
 
-.MovieCard-wrapper:hover{
+.BookCard-wrapper:hover{
     background-color: #ce8219;
 }
 
-.MovieCard-wrapper:hover .MovieCard-poster img{
+.BookCard-wrapper:hover .BookCard-poster img{
     transform: scale(1.02);
     transition: all 0.3s ease;
 }
 
-
-
-.MovieCard-content {
+.BookCard-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     max-width: 100%;
 }
 
-.MovieCard-poster img {
+.BookCard-poster img {
     max-width: 100%;
     height: auto;
     border-radius: 15px;
@@ -42,14 +40,14 @@
     transition: all 0.3s ease;
 }
 
-.MovieCard-movieName {
+.BookCard-bookName {
     margin-bottom: 5px;
     text-align: center;
     font-family: "Poppins", sans-serif;
     font-style: normal;
 }
 
-.MovieCard-movieDescription {
+.BookCard-bookDescription {
     margin-top: 5px;
     text-align: left;
     font-family: "Poppins", sans-serif;
@@ -58,9 +56,8 @@
     margin-bottom: 10px;
 }
 
-.MovieCard-movieType,
-.MovieCard-directors,
-.MovieCard-genres {
+.BookCard-authors,
+.BookCard-genres {
     text-align: left;
     font-family: "Poppins", sans-serif;
     font-style: normal;

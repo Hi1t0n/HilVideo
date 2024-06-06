@@ -15,6 +15,11 @@ label {
     display: flex;
 }
 
+.add-movie-select{
+    display: flex;
+    flex-direction: row;
+}
+
 .content{
     flex: 1;
 }
