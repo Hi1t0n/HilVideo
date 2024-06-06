@@ -1,17 +1,24 @@
 import {useCallback, useEffect, useState} from "react";
 import axios, {AxiosError} from "axios";
 import {apiUrl} from "../../utils/constants";
-import MovieCard from "../../Components/Card/MovieCard/MovieCard";
 import "../mainMoviesPage/MainMoviesPage.css"
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {Books} from "../../types/BooksTypes";
 import BookCard from "../../Components/Card/BookCard/BookCard";
+import {Movies} from "../../types/MovieData";
+import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
 
 function MainBooksPage() {
     const { bookName } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [books, setBooks] = useState<Books[] | null>(null);
+
+
+    // @ts-ignore
+    const userData = useSelector((state) => state.userData);
 
     const getBooks = useCallback(async () => {
         try {
@@ -38,18 +45,38 @@ function MainBooksPage() {
         }
     }, [bookName, navigate]);
 
+    const getFavoritesBooks = useCallback(async () => {
+        try {
+            const response = await axios.get<Books[]>(`${apiUrl}books/getfavoritebook/${userData.userId}`, {
+                withCredentials: true
+            });
+
+            if (response.status === 200) {
+                setBooks(response.data);
+                return;
+            }
+        }
+        catch (error){
+            toast.error("Что-то пошло не так");
+        }
+    }, [])
+
     useEffect(() => {
-        if(bookName){
+        if (location.pathname === "/favorites/books"){
+            getFavoritesBooks();
+        }
+        else if(bookName){
             getSearchBooks();
         }
         else{
             getBooks();
         }
-    }, [getBooks, getSearchBooks, bookName]);
+    }, [getBooks, getSearchBooks, bookName, userData]);
     return(
         <div className="MainBooksPage-wrapper">
             <div className="MainBooksPage-content">
                 {books?.map((book) => (<BookCard
+                    key={book.id}
                     id={book.id}
                     bookName={book.bookName}
                     bookDescription={book.bookDescription}

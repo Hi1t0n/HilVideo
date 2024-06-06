@@ -365,4 +365,12 @@ public class MovieManager : IMovieManager
         await _context.SaveChangesAsync();
         return Result.Success<FavoriteMoviesUsers, IError>(existData);
     }
+
+    public async Task<Result<bool>> CheckMovieFromFavoritesAsync(CheckMovieFromFavoritesRequest request)
+    {
+        var movieToFavorite = await _context.FavoriteMoviesUsers
+            .Where(x => x.UserId == request.UserId && x.MovieId == request.MovieId).FirstOrDefaultAsync();
+
+        return movieToFavorite is null ? Result.Success(false) : Result.Success(true);
+    }
 }

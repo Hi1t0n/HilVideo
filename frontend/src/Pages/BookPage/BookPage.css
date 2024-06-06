@@ -20,6 +20,10 @@
 .book-name{
     margin-bottom: 10px;
 }
+.button-wrapper{
+    display: flex;
+    flex-direction: row;
+}
 
 
 .about-wrapper{

@@ -313,6 +313,8 @@ public class BookManager : IBookManager
             BookId = request.BookId
         });
 
+        await _context.SaveChangesAsync();
+
         return Result.Success();
     }
 
@@ -332,5 +334,13 @@ public class BookManager : IBookManager
         await _context.SaveChangesAsync();
 
         return Result.Success<FavoriteBooksUsers, IError>(bookFavorite);
+    }
+
+    public async Task<Result<bool>> CheckBookFromFavoritesAsync(CheckBookFromFavoritesRequest request)
+    {
+        var bookFavorite = await _context.FavoriteBooksUsers
+            .Where(x => x.BookId == request.BookId && x.UserId == request.UserId).FirstOrDefaultAsync();
+
+        return bookFavorite is null ? Result.Success(false) : Result.Success(true);
     }
 }

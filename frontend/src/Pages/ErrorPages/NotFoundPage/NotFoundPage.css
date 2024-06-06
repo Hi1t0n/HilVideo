@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: center;
     font-family: 'Poppins', sans-serif;
+    color: #cccccc;
 }
 
 .gif-wrapper img{

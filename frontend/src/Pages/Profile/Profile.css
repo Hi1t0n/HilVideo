@@ -1,0 +1,9 @@
+.button-wrapper{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 0 0;
+}
+
+.button-wrapper div{
+    margin-right: 10px;
+}

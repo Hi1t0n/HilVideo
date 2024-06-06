@@ -10,9 +10,9 @@ public static class MovieTypeRouting
     {
         var movieTypeGroup = application.MapGroup("/api/movietype");
 
-        movieTypeGroup.MapPost(pattern: "/", handler: AddMovieTypeAsync);
+        movieTypeGroup.MapPost(pattern: "/", handler: AddMovieTypeAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieTypeGroup.MapGet(pattern: "/", handler: GetAllMovieTypeAsync);
-        movieTypeGroup.MapPut(pattern: "/", handler: UpdateMovieTypeByIdAsync);
+        movieTypeGroup.MapPut(pattern: "/", handler: UpdateMovieTypeByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");;
         
         return application;
     }

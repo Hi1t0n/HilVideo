@@ -70,5 +70,7 @@ public interface IBookManager
     /// <param name="request">Данные для удаления</param>
     /// <returns>Результат удаления</returns>
     Task<Result<FavoriteBooksUsers, IError>> DeleteBookFromFavoritesAsync(BookToFavoriteRequest request);
-    
+
+    Task<Result<bool>> CheckBookFromFavoritesAsync(CheckBookFromFavoritesRequest request);
+
 }

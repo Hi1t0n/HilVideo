@@ -18,6 +18,16 @@ label {
 .add-movie-select{
     display: flex;
     flex-direction: row;
+    margin-right: 0;
+}
+
+.select-file-wrapper{
+    display: flex;
+    flex-direction: row;
+}
+
+.select-file-wrapper div{
+    margin: 10px 10px 10px 0;
 }
 
 .content{
@@ -27,7 +37,18 @@ label {
 .add-movie-button{
     font-family: "Poppins", sans-serif;
     cursor: pointer ;
+    border-radius: 5px;
+    outline: none;
+    background-color: #cccccc;
+}
 
+input[type="date"]{
+    border: 1px solid #c4c4c4;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 3px 5px;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+    width: 190px;
 }
 
 .movie-input{
@@ -38,7 +59,6 @@ label {
     border-radius: 4px;
     font-family: "Poppins", sans-serif;
     margin-bottom: 8px;
-
 }
 .movie-input::placeholder{
     color: #494949;

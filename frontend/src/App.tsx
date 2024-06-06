@@ -15,6 +15,8 @@ import AddBookPage from "./Pages/AdminPages/AddBookPage";
 import MainBooksPage from "./Pages/mainBooksPage/MainBooksPage";
 import {Book} from "@mui/icons-material";
 import BookPage from "./Pages/BookPage/BookPage";
+import MakeAdminPage from "./Pages/AdminPages/MakeAdminPage";
+import RemoveAdminPage from "./Pages/AdminPages/RemoveAdminPage";
 
 
 function App() {
@@ -23,11 +25,17 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path={"/"} element={<MainPage/>}>
-                    <Route path={"/profile"} element={
+                    <Route path={"profile"} element={
                         <RequiredAuth>
                             <Profile/>
                         </RequiredAuth>
-                    }/>
+                    }>
+
+                    </Route>
+                    <Route path={"/favorites"}>
+                        <Route path={"books"} element={<MainBooksPage/>}/>
+                        <Route path={"movies"} element={<MainMoviesPage/>}/>
+                    </Route>
                     <Route path={"/book"}  element={<MainBooksPage/>}/>
                     <Route path={"/"} element={<MainMoviesPage/>}/>
                     <Route path={"/movie/:id"} element={<MoviePage/>}/>
@@ -52,8 +60,8 @@ function App() {
                         <Route path={"delete"}/>
                     </Route>
                     <Route path={"admin"}>
-                        <Route path={"add"}/>
-                        <Route path={"remove"}/>
+                        <Route path={"add"} element={<MakeAdminPage/>}/>
+                        <Route path={"remove"} element={<RemoveAdminPage/>}/>
                     </Route>
                 </Route>
             </Routes>

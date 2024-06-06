@@ -145,27 +145,30 @@ function AddBookPage () {
           <ToastContainer/>
           <div className={"AddBookPage-content"}>
               <div className={"input-title"}>
-                  <input type={"text"} onChange={onChangeTitle} value={title} autoComplete={"off"}
+                  <input type={"text"} onChange={onChangeTitle} className={'title-input'} value={title} autoComplete={"off"}
                          placeholder={"Название книги*"} required={true}/>
               </div>
-              <div className={'textarea-description'}>
-                  <textarea onChange={onChangeDescription} value={description} autoComplete={"off"}
+              <div className={'textarea-description-wrapper'}>
+                  <textarea className={"textarea-description"} onChange={onChangeDescription} value={description} autoComplete={"off"}
                             placeholder={"Описание*"} required={true}/>
               </div>
-              <div>
-                  <button onClick={handlePickPoster}>Выберите постер</button>
-                  <input className={'file-input'} ref={PosterFileRef} type={'file'} name={"poster"}
-                         accept="image/png, image/jpeg"
-                         required={true} onChange={handleChangePosterFile}/>
+              <div className={'select-file-wrapper'}>
+                  <div>
+                      <button className={'add-book-button'} onClick={handlePickPoster}>Выберите постер</button>
+                      <input className={'file-input'} ref={PosterFileRef} type={'file'} name={"poster"}
+                             accept="image/png, image/jpeg"
+                             required={true} onChange={handleChangePosterFile}/>
+                  </div>
+                  <div>
+                      <button onClick={handlePickBook} className={'add-book-button'} >Выберите книгу</button>
+                      <input className={'file-input'} ref={BookFileRef} type={'file'} name={"movie"}
+                             accept="application/pdf"
+                             required={true} onChange={handleChangeBookFile}/>
+                  </div>
               </div>
               <div>
-                  <button onClick={handlePickBook}>Выберите книгу</button>
-                  <input className={'file-input'} ref={BookFileRef} type={'file'} name={"movie"}
-                         accept="application/pdf"
-                         required={true} onChange={handleChangeBookFile}/>
-              </div>
-              <div>
-                  <input className={'data-input'} value={releaseDate} type={'date'} onChange={handleChangeReleaseDate} required/>
+                  <input className={'data-input'} value={releaseDate} type={'date'} onChange={handleChangeReleaseDate}
+                         required/>
               </div>
               <div className={"select-group"}>
                   <SelectCheckBox data={genresData} handleChange={handleChangeGenresData} multiple={true}
@@ -174,7 +177,7 @@ function AddBookPage () {
                                   required={true} placeholder={"Авторы"} selectedData={selectedAuthors}/>
               </div>
               <div>
-                  <button className={"addbook-button"} onClick={handleAddBook}>Добавить книгу</button>
+                  <button className={"add-book-button"} onClick={handleAddBook}>Добавить книгу</button>
               </div>
           </div>
 

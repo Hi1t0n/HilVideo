@@ -98,6 +98,7 @@ function AddMoviePage(){
         }).then(response=> {
             if (response.status === 201) {
                 toast.success("Фильм успешно добавлен");
+                window.location.reload();
             }
         }).catch(error => {
             const axiosError = error as AxiosError;
@@ -158,14 +159,18 @@ function AddMoviePage(){
                         <textarea className={"movie-textarea"} placeholder={"Описание*"} value={description} required={true}
                           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}/>
                     </div>
-                    <div>
-                        <button onClick={handlePickPoster}>Выберите постер</button>
-                        <input className={'file-input'} ref={PosterFileRef} type={'file'} name={"poster"} accept="image/png, image/jpeg"
-                               required={true} onChange={handleChangePosterFile}/>
-                    </div>
-                    <div>
-                        <button onClick={handlePickMovie}>Выберите фильм</button>
-                        <input className={'file-input'} ref={MovieFileRef} type={'file'} name={"movie"} accept="video/*, .mp4" required={true} onChange={handleChangeMovieFile}/>
+                    <div className={'select-file-wrapper'}>
+                        <div>
+                            <button className={'add-movie-button'} onClick={handlePickPoster}>Выберите постер</button>
+                            <input className={'file-input'} ref={PosterFileRef} type={'file'} name={"poster"}
+                                   accept="image/png, image/jpeg"
+                                   required={true} onChange={handleChangePosterFile}/>
+                        </div>
+                        <div>
+                            <button className={'add-movie-button'} onClick={handlePickMovie}>Выберите фильм</button>
+                            <input className={'file-input'} ref={MovieFileRef} type={'file'} name={"movie"}
+                                   accept="video/*, .mp4" required={true} onChange={handleChangeMovieFile}/>
+                        </div>
                     </div>
                     <div>
                         <input className={'data-input'} type={'date'} onChange={handleChangeReleaseDate} required/>

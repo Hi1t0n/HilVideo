@@ -21,6 +21,10 @@ html, body {
     border-radius: 15px;
 }
 
+.favorites-button{
+    cursor: pointer;
+}
+
 .movie-description {
     height: 280px;
     width: 300px;

@@ -18,6 +18,8 @@ import axios, {AxiosError} from "axios";
 import {PASSWORD_REGEX} from "../../Data/REGEX";
 import LogOutButton from "../../Components/Button/LogOutButton/LogOutButton";
 import AdminPanelButton from "../../Components/AdminPanel/AdminPanelButton/AdminPanelButton";
+import {useNavigate} from "react-router-dom";
+import './Profile.css'
 
 type Severity = 'error' | 'warning' | 'info' | 'success';
 
@@ -31,6 +33,7 @@ function Profile() {
     // @ts-ignore
     const userData = useSelector((state: UserDataState)=> state.userData);
     const possibleRoles = ['Owner', 'Admin'];
+    const navigate = useNavigate();
 
     const handleCurrentPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentPassword(e.target.value);
@@ -118,10 +121,20 @@ function Profile() {
                             </div>
                         </AccordionDetails>
                     </Accordion>
-                    <div>
-                        {possibleRoles.includes(userData.roleName) && (
-                            <AdminPanelButton text={"Админ панель"}/>
-                        )}
+                    <div className={'button-wrapper'}>
+                        <div>
+                            {possibleRoles.includes(userData.roleName) && (
+                                <AdminPanelButton text={"Админ панель"}/>
+                            )}
+                        </div>
+                        <div>
+                            <Button sx={{color: ''}} variant={'outlined'}
+                                    onClick={() => navigate('/favorites/movies', {replace: false})}>{"Избранные фильмы"}</Button>
+                        </div>
+                        <div>
+                            <Button sx={{color: ''}} variant={'outlined'}
+                                    onClick={() => navigate('/favorites/books', {replace: false})}>{"Избранные книги"}</Button>
+                        </div>
                     </div>
                     <div>
                         <LogOutButton text={'Выход'}/>

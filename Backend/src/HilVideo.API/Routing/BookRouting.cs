@@ -1,8 +1,10 @@
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using UserService.Domain.DTO.BookDTO;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.ErrorObjects;
+using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace UserSevice.Host.Routing;
 
@@ -12,15 +14,16 @@ public static class BookRouting
     {
         var bookGroup = application.MapGroup("/api/books");
 
-        bookGroup.MapPost(pattern: "/", handler: AddBookAsync);
-        bookGroup.MapPost(pattern: "/addbooktofavorites", handler: AddBookToFavoritesAsync);
+        bookGroup.MapPost(pattern: "/", handler: AddBookAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        bookGroup.MapPost(pattern: "/addbooktofavorites", handler: AddBookToFavoritesAsync).RequireAuthorization();
         bookGroup.MapGet(pattern: "/search/{bookName}", handler: GetSearchBookAsync);
-        bookGroup.MapGet(pattern: "/getfavoritebook/{id:guid}", handler: GetFavoriteBooksByUserIdAsync);
+        bookGroup.MapGet(pattern: "/getfavoritebook/{id:guid}", handler: GetFavoriteBooksByUserIdAsync).RequireAuthorization();
         bookGroup.MapGet(pattern: "/", handler: GetBooksAsync);
         bookGroup.MapGet(pattern: "/{id:guid}", handler: GetBookByIdAsync);
-        bookGroup.MapPut(pattern: "/", handler: UpdateBookByIdAsync);
-        bookGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteMovieByIdAsync);
-        bookGroup.MapDelete(pattern: "/deletebookfromfavorites", handler: DeleteBookFromFavoritesAsync);
+        bookGroup.MapGet(pattern: "/check-favorite", handler: CheckBookFromFavoritesAsync).RequireAuthorization();
+        bookGroup.MapPut(pattern: "/", handler: UpdateBookByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        bookGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteBookByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
+        bookGroup.MapDelete(pattern: "/deletebookfromfavorites", handler: DeleteBookFromFavoritesAsync).RequireAuthorization();
 
         return application;
     }
@@ -155,7 +158,7 @@ public static class BookRouting
         return Results.Ok(result.Value);
     }
 
-    public static async Task<IResult> DeleteMovieByIdAsync(Guid id, IBookManager manager)
+    public static async Task<IResult> DeleteBookByIdAsync(Guid id, IBookManager manager)
     {
         var result = await manager.DeleteBookByIdAsync(id);
         
@@ -208,5 +211,15 @@ public static class BookRouting
         }
 
         return Results.Ok();
+    }
+
+    public static async Task<IResult> CheckBookFromFavoritesAsync(Guid userId, Guid bookId, IBookManager manager)
+    {
+        var result = await manager.CheckBookFromFavoritesAsync(new CheckBookFromFavoritesRequest(userId, bookId));
+
+        return Results.Ok(new
+        {
+            isFavorite = result.Value
+        });
     }
  }

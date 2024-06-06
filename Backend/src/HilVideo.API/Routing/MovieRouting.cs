@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using UserService.Domain.Contracts;
@@ -20,6 +21,7 @@ public static class MovieRouting
         movieGroup.MapGet(pattern: "/getfavoritemovies/{id:guid}", handler: GetFavoriteMoviesByUserIdAsync);
         movieGroup.MapGet(pattern: "/", handler: GetMoviesAsync);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
+        movieGroup.MapGet(pattern: "/check-favorite", handler: CheckMovieFromFavoritesAsync).RequireAuthorization();
         movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/deletemoviefromfavorites", handler: DeleteMovieFromFavorites).RequireAuthorization();
@@ -191,5 +193,16 @@ public static class MovieRouting
         }
 
         return Results.Ok();
+    }
+
+    public static async Task<IResult> CheckMovieFromFavoritesAsync(Guid userId, Guid movieId,
+        IMovieManager movieManager)
+    {
+        var result = await movieManager.CheckMovieFromFavoritesAsync(new CheckMovieFromFavoritesRequest(userId, movieId));
+
+        return Results.Ok(new
+        {
+            isFavorite = result.Value
+        });
     }
 }
