@@ -18,3 +18,8 @@ export interface Book {
     authors: string[];
     genres: string[];
 }
+
+export interface BookDataForDelete {
+    id: string;
+    name: string;
+}

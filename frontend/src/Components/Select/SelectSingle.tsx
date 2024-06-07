@@ -9,9 +9,10 @@ import Checkbox from '@mui/material/Checkbox';
 import {Director} from "../../types/DirectorsTypes";
 import {Genre} from "../../types/GenresTypes";
 import {MovieType} from "../../types/MovieTypeTypes";
+import {MovieDataForDelete} from "../../types/MovieData";
 
 interface Props {
-    data: Genre[] | Director[] | MovieType[];
+    data: Genre[] | Director[] | MovieType[] | MovieDataForDelete[];
     handleChange: (event: SelectChangeEvent<string>) => void;
     multiple: boolean;
     placeholder: string;

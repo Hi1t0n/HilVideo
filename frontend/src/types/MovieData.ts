@@ -24,3 +24,8 @@ export interface Movies {
     directors: string[];
     genres: string[];
 }
+
+export interface MovieDataForDelete {
+    id: string;
+    name: string;
+}

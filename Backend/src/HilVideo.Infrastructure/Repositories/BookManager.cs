@@ -197,6 +197,12 @@ public class BookManager : IBookManager
         return Result.Success(books);
     }
 
+    public async Task<Result<List<GetBookIdWithName>>> GetBookIdWithNameAsync()
+    {
+        var books = await _context.Books.Select(x => new GetBookIdWithName(x.BookId, x.BookName)).ToListAsync();
+        return Result.Success(books);
+    }
+
     /// <inheritdoc />
     public async Task<Result<GetBookByIdResponse, IError>> GetBookByIdAsync(Guid id)
     {
@@ -336,6 +342,7 @@ public class BookManager : IBookManager
         return Result.Success<FavoriteBooksUsers, IError>(bookFavorite);
     }
 
+    /// <inheritdoc />
     public async Task<Result<bool>> CheckBookFromFavoritesAsync(CheckBookFromFavoritesRequest request)
     {
         var bookFavorite = await _context.FavoriteBooksUsers

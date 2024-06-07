@@ -373,4 +373,11 @@ public class MovieManager : IMovieManager
 
         return movieToFavorite is null ? Result.Success(false) : Result.Success(true);
     }
+
+    public async Task<Result<List<GetMovieIdWithName>>> GetMovieIdWithNameAsync()
+    {
+        var movies = await _context.Movies.Select(x => new GetMovieIdWithName(x.MovieId, x.MovieName)).ToListAsync();
+
+        return Result.Success(movies);
+    }
 }

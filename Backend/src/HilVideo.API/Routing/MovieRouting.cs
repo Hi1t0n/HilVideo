@@ -22,6 +22,7 @@ public static class MovieRouting
         movieGroup.MapGet(pattern: "/", handler: GetMoviesAsync);
         movieGroup.MapGet(pattern: "/{id:guid}", handler: GetMovieById);
         movieGroup.MapGet(pattern: "/check-favorite", handler: CheckMovieFromFavoritesAsync).RequireAuthorization();
+        movieGroup.MapGet(pattern: "/get-movie-id-with-name", handler: GetMovieIdWithName).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapPut(pattern: "/", handler: UpdateMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteMovieById).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         movieGroup.MapDelete(pattern: "/deletemoviefromfavorites", handler: DeleteMovieFromFavorites).RequireAuthorization();
@@ -126,6 +127,13 @@ public static class MovieRouting
                     });
             }
         }
+
+        return Results.Ok(result.Value);
+    }
+
+    public static async Task<IResult> GetMovieIdWithName(IMovieManager movieManager)
+    {
+        var result = await movieManager.GetMovieIdWithNameAsync();
 
         return Results.Ok(result.Value);
     }

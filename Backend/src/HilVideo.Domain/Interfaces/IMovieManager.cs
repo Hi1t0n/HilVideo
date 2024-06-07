@@ -17,5 +17,6 @@ public interface IMovieManager
     Task<Result> AddMovieToFavoritesAsync(MovieToFavoriteRequest request);
     Task<Result<FavoriteMoviesUsers, IError>> DeleteMovieFromFavoritesAsync(MovieToFavoriteRequest request);
     Task<Result<bool>> CheckMovieFromFavoritesAsync(CheckMovieFromFavoritesRequest request);
+    Task<Result<List<GetMovieIdWithName>>> GetMovieIdWithNameAsync();
 
 }

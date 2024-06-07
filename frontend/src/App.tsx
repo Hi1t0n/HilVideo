@@ -17,6 +17,8 @@ import {Book} from "@mui/icons-material";
 import BookPage from "./Pages/BookPage/BookPage";
 import MakeAdminPage from "./Pages/AdminPages/MakeAdminPage";
 import RemoveAdminPage from "./Pages/AdminPages/RemoveAdminPage";
+import DeleteMoviePage from "./Pages/AdminPages/DeleteMoviePage";
+import DeleteBookPage from "./Pages/AdminPages/DeleteBookPage";
 
 
 function App() {
@@ -53,11 +55,11 @@ function App() {
                 }>
                     <Route path={"movie"}>
                         <Route path={"add"} element={<AddMoviePage/>}/>
-                        <Route path={"delete"}/>
+                        <Route path={"delete"} element={<DeleteMoviePage/>}/>
                     </Route>
                     <Route path={"book"}>
                         <Route path={"add"} element={<AddBookPage/>}/>
-                        <Route path={"delete"}/>
+                        <Route path={"delete"} element={<DeleteBookPage/>}/>
                     </Route>
                     <Route path={"admin"}>
                         <Route path={"add"} element={<MakeAdminPage/>}/>

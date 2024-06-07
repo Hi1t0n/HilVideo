@@ -5,6 +5,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import GroupRemoveIcon from '@mui/icons-material/GroupRemove';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 
 export const SidebarData = [
     {
@@ -26,6 +27,11 @@ export const SidebarData = [
         title: 'Удалить фильм',
         icon: <VideocamOffIcon/>,
         link: 'movie/delete',
+    },
+    {
+      title: 'Удалить книгу',
+      icon: <BookmarkRemoveIcon/>,
+      link: 'book/delete'
     },
     {
         title: 'Назначить админа',

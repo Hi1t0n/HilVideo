@@ -71,6 +71,16 @@ public interface IBookManager
     /// <returns>Результат удаления</returns>
     Task<Result<FavoriteBooksUsers, IError>> DeleteBookFromFavoritesAsync(BookToFavoriteRequest request);
 
+    /// <summary>
+    /// Проверка содержится ли книга у пользователя в избранном
+    /// </summary>
+    /// <param name="request">DTO для получения</param>
+    /// <returns>Булевое значение</returns>
     Task<Result<bool>> CheckBookFromFavoritesAsync(CheckBookFromFavoritesRequest request);
-
+    
+    /// <summary>
+    /// Получение списка с id и названием книги
+    /// </summary>
+    /// <returns>Список книг</returns>
+    Task<Result<List<GetBookIdWithName>>> GetBookIdWithNameAsync();
 }

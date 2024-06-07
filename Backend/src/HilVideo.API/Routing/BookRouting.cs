@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using UserService.Domain.DTO.BookDTO;
@@ -21,6 +22,7 @@ public static class BookRouting
         bookGroup.MapGet(pattern: "/", handler: GetBooksAsync);
         bookGroup.MapGet(pattern: "/{id:guid}", handler: GetBookByIdAsync);
         bookGroup.MapGet(pattern: "/check-favorite", handler: CheckBookFromFavoritesAsync).RequireAuthorization();
+        bookGroup.MapGet(pattern: "/get-book-id-with-name", handler: GetBookIdWithNameAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         bookGroup.MapPut(pattern: "/", handler: UpdateBookByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         bookGroup.MapDelete(pattern: "/{id:guid}", handler: DeleteBookByIdAsync).RequireAuthorization(policyNames: "AdminOwnerPolicy");
         bookGroup.MapDelete(pattern: "/deletebookfromfavorites", handler: DeleteBookFromFavoritesAsync).RequireAuthorization();
@@ -130,6 +132,13 @@ public static class BookRouting
                     });
             }
         }
+
+        return Results.Ok(result.Value);
+    }
+
+    public static async Task<IResult> GetBookIdWithNameAsync(IBookManager manager)
+    {
+        var result = await manager.GetBookIdWithNameAsync();
 
         return Results.Ok(result.Value);
     }
